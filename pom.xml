@@ -5,12 +5,12 @@
 	<artifactId>twitter</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<dependencies>
-	
-			<dependency>
-				<groupId>it.cnr.isti.hpc</groupId>
-				<artifactId>hpc-utils</artifactId>
-				<version>0.0.4</version>
-			</dependency>
+
+		<dependency>
+			<groupId>it.cnr.isti.hpc</groupId>
+			<artifactId>hpc-utils</artifactId>
+			<version>0.0.4</version>
+		</dependency>
 
 
 		<dependency>
@@ -29,16 +29,13 @@
 			<version>0.1.1</version>
 		</dependency>
 
-		<!-- <dependency>
+		<!-- <dependency> <groupId>org.twitter4j</groupId> <artifactId>twitter4j-core</artifactId> 
+			<version>2.2.5</version> </dependency> -->
+		<dependency>
 			<groupId>org.twitter4j</groupId>
 			<artifactId>twitter4j-core</artifactId>
-			<version>2.2.5</version>
-		</dependency> -->
-	      <dependency>
-	         <groupId>org.twitter4j</groupId>
-	         <artifactId>twitter4j-core</artifactId>
-	         <version>3.0.4-SNAPSHOT</version>
-	      </dependency>
+			<version>3.0.4-SNAPSHOT</version>
+		</dependency>
 
 		<!-- language detection, manually installed from http://code.google.com/p/language-detection/issues/detail?id=3 -->
 		<dependency>
@@ -64,6 +61,12 @@
 		<dependency>
 			<groupId>org.apache.lucene</groupId>
 			<artifactId>lucene-core</artifactId>
+			<version>3.4.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.lucene</groupId>
+			<artifactId>lucene-analyzers</artifactId>
 			<version>3.4.0</version>
 		</dependency>
 
@@ -124,7 +127,7 @@
 				</configuration>
 			</plugin>
 
-			
+
 		</plugins>
 	</build>
 
@@ -134,7 +137,7 @@
 		<jetty.version>6.1.18</jetty.version>
 		<http.port>8080</http.port>
 	</properties>
-	
+
 	<repositories>
 		<repository>
 			<id>local jars</id>

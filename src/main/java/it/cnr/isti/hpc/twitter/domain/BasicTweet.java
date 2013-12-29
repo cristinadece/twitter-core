@@ -17,11 +17,19 @@ package it.cnr.isti.hpc.twitter.domain;
 
 import it.cnr.isti.hpc.twitter.util.Text;
 
+import java.io.IOException;
+import java.io.StringReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.TokenStream;
+import org.apache.lucene.analysis.snowball.SnowballAnalyzer;
+import org.apache.lucene.analysis.tokenattributes.TermAttribute;
+import org.apache.lucene.util.Version;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,6 +66,35 @@ public abstract class BasicTweet implements Tweet {
 
 	public String getLanguage() {
 		return Text.getLanguage(text);
+	}
+
+	public String getStemmedText() {
+		StringBuffer result = new StringBuffer();
+		if (text != null && text.trim().length() > 0) {
+			StringReader tReader = new StringReader(text);
+			// FIXME using the english stemmer
+			Analyzer analyzer = new SnowballAnalyzer(Version.LUCENE_34,
+					"English", Collections.emptySet());
+			TokenStream tStream = analyzer.tokenStream("contents", tReader);
+			TermAttribute term = tStream.addAttribute(TermAttribute.class);
+
+			try {
+				while (tStream.incrementToken()) {
+					result.append(term.term());
+					result.append(' ');
+				}
+			} catch (IOException ioe) {
+				logger.error(ioe.toString());
+			}
+		}
+
+		// If, for some reason, the stemming did not happen, return the original
+		// text
+		if (result.length() == 0) {
+			logger.warn("stemming not performed for {}", text);
+			result.append(text);
+		}
+		return result.toString().trim();
 	}
 
 	public List<String> getInLineHashtags() {
@@ -133,147 +170,147 @@ public abstract class BasicTweet implements Tweet {
 		return terms;
 	}
 
-//	public String getTextWithoutContextualHashtags() {
-//
-//		// get the text
-//
-//		String tweetText = getText().toLowerCase();
-//
-//		// remove URLS & contextual hashtags
-//
-//		String[] items = tweetText.split("[ 	]");
-//		for (String s : items) {
-//
-//			if (!s.isEmpty()) {
-//
-//				// URL
-//				try {
-//					@SuppressWarnings("unused")
-//					URL url = new URL(s);
-//					tweetText = tweetText.replace(s, "");
-//				} catch (MalformedURLException e) {
-//
-//				}
-//
-//				// contextual
-//
-//				List<String> contextuals = getContextHashtags();
-//				for (String contextHt : contextuals) {
-//					StringBuilder sb = new StringBuilder();
-//					sb.append("#").append(contextHt);
-//					tweetText = tweetText.replace(sb.toString(), "");
-//				}
-//			}
-//
-//		}
-//
-//		// remove mentions
-//		tweetText = getTextWithoutMentions(tweetText);
-//
-//		// replace inline hashtags with segmented version
-//
-//		HashtagSegmenter segm = HashtagSegmenter.getStandardSegmenter();
-//		List<String> inlineHashtags = getInLineHashtags();
-//
-//		for (String hashtag : inlineHashtags) {
-//			String splitHashtag = segm.segment(hashtag);
-//			if (!splitHashtag.isEmpty()) {
-//				tweetText = tweetText.replaceAll(hashtag, splitHashtag);
-//			}
-//		}
-//
-//		// see if
-//
-//		if (tweetText.isEmpty()) {
-//			return tweetText;
-//		}
-//		// rebuild tweet text???
-//		else {
-//			Text text = new Text(tweetText);
-//			StringBuilder cleanTweet = new StringBuilder();
-//			for (String words : text.getTerms()) {
-//				cleanTweet.append(words).append(" ");
-//			}
-//			return cleanTweet.toString().trim();
-//		}
-//
-//	}
+	// public String getTextWithoutContextualHashtags() {
+	//
+	// // get the text
+	//
+	// String tweetText = getText().toLowerCase();
+	//
+	// // remove URLS & contextual hashtags
+	//
+	// String[] items = tweetText.split("[ 	]");
+	// for (String s : items) {
+	//
+	// if (!s.isEmpty()) {
+	//
+	// // URL
+	// try {
+	// @SuppressWarnings("unused")
+	// URL url = new URL(s);
+	// tweetText = tweetText.replace(s, "");
+	// } catch (MalformedURLException e) {
+	//
+	// }
+	//
+	// // contextual
+	//
+	// List<String> contextuals = getContextHashtags();
+	// for (String contextHt : contextuals) {
+	// StringBuilder sb = new StringBuilder();
+	// sb.append("#").append(contextHt);
+	// tweetText = tweetText.replace(sb.toString(), "");
+	// }
+	// }
+	//
+	// }
+	//
+	// // remove mentions
+	// tweetText = getTextWithoutMentions(tweetText);
+	//
+	// // replace inline hashtags with segmented version
+	//
+	// HashtagSegmenter segm = HashtagSegmenter.getStandardSegmenter();
+	// List<String> inlineHashtags = getInLineHashtags();
+	//
+	// for (String hashtag : inlineHashtags) {
+	// String splitHashtag = segm.segment(hashtag);
+	// if (!splitHashtag.isEmpty()) {
+	// tweetText = tweetText.replaceAll(hashtag, splitHashtag);
+	// }
+	// }
+	//
+	// // see if
+	//
+	// if (tweetText.isEmpty()) {
+	// return tweetText;
+	// }
+	// // rebuild tweet text???
+	// else {
+	// Text text = new Text(tweetText);
+	// StringBuilder cleanTweet = new StringBuilder();
+	// for (String words : text.getTerms()) {
+	// cleanTweet.append(words).append(" ");
+	// }
+	// return cleanTweet.toString().trim();
+	// }
+	//
+	// }
 
-//	public String getTextWithoutOneContextualHashtag(String contextualHt) {
-//
-//		// get the text
-//
-//		String tweetText = getText().toLowerCase();
-//
-//		// remove URLS
-//
-//		String[] items = tweetText.split("[ 	]");
-//		for (String s : items) {
-//
-//			if (!s.isEmpty()) {
-//
-//				// URL
-//				try {
-//					@SuppressWarnings("unused")
-//					URL url = new URL(s);
-//					tweetText = tweetText.replace(s, "");
-//				} catch (MalformedURLException e) {
-//
-//				}
-//
-//			}
-//
-//		}
-//
-//		// remove contextual
-//
-//		StringBuilder sb = new StringBuilder();
-//		sb.append("#").append(contextualHt);
-//		tweetText = tweetText.replace(sb.toString(), "");
-//
-//		// remove mentions
-//		tweetText = getTextWithoutMentions(tweetText);
-//
-//		// replace inline hashtags with segmented version
-//
-//		HashtagSegmenter segm = HashtagSegmenter.getStandardSegmenter();
-//		List<String> inlineHashtags = getInLineHashtags();
-//
-//		for (String hashtag : inlineHashtags) {
-//			String splitHashtag = segm.segment(hashtag);
-//			tweetText = tweetText.replaceAll(hashtag, splitHashtag);
-//		}
-//
-//		// see if
-//
-//		if (tweetText.isEmpty()) {
-//			return tweetText;
-//		}
-//		
-//		// rebuild tweet text???
-//		else {
-//			Text text = new Text(tweetText);
-//			StringBuilder cleanTweet = new StringBuilder();
-//			for (String words : text.getTerms()) {
-//				cleanTweet.append(words).append(" ");
-//			}
-//			return cleanTweet.toString().trim();
-//		}
-//
-//	}
+	// public String getTextWithoutOneContextualHashtag(String contextualHt) {
+	//
+	// // get the text
+	//
+	// String tweetText = getText().toLowerCase();
+	//
+	// // remove URLS
+	//
+	// String[] items = tweetText.split("[ 	]");
+	// for (String s : items) {
+	//
+	// if (!s.isEmpty()) {
+	//
+	// // URL
+	// try {
+	// @SuppressWarnings("unused")
+	// URL url = new URL(s);
+	// tweetText = tweetText.replace(s, "");
+	// } catch (MalformedURLException e) {
+	//
+	// }
+	//
+	// }
+	//
+	// }
+	//
+	// // remove contextual
+	//
+	// StringBuilder sb = new StringBuilder();
+	// sb.append("#").append(contextualHt);
+	// tweetText = tweetText.replace(sb.toString(), "");
+	//
+	// // remove mentions
+	// tweetText = getTextWithoutMentions(tweetText);
+	//
+	// // replace inline hashtags with segmented version
+	//
+	// HashtagSegmenter segm = HashtagSegmenter.getStandardSegmenter();
+	// List<String> inlineHashtags = getInLineHashtags();
+	//
+	// for (String hashtag : inlineHashtags) {
+	// String splitHashtag = segm.segment(hashtag);
+	// tweetText = tweetText.replaceAll(hashtag, splitHashtag);
+	// }
+	//
+	// // see if
+	//
+	// if (tweetText.isEmpty()) {
+	// return tweetText;
+	// }
+	//
+	// // rebuild tweet text???
+	// else {
+	// Text text = new Text(tweetText);
+	// StringBuilder cleanTweet = new StringBuilder();
+	// for (String words : text.getTerms()) {
+	// cleanTweet.append(words).append(" ");
+	// }
+	// return cleanTweet.toString().trim();
+	// }
+	//
+	// }
 
-//	public String getSegmentedHashtags() {
-//
-//		HashtagSegmenter segm = HashtagSegmenter.getStandardSegmenter();
-//		List<String> hashtagList = getHashtagsList();
-//		StringBuilder segmHashtags = new StringBuilder();
-//
-//		for (String hashtag : hashtagList) {
-//			String splitHashtag = segm.segment(hashtag);
-//			segmHashtags.append(splitHashtag).append(" ");
-//		}
-//		return segmHashtags.toString().trim();
-//	}
+	// public String getSegmentedHashtags() {
+	//
+	// HashtagSegmenter segm = HashtagSegmenter.getStandardSegmenter();
+	// List<String> hashtagList = getHashtagsList();
+	// StringBuilder segmHashtags = new StringBuilder();
+	//
+	// for (String hashtag : hashtagList) {
+	// String splitHashtag = segm.segment(hashtag);
+	// segmHashtags.append(splitHashtag).append(" ");
+	// }
+	// return segmHashtags.toString().trim();
+	// }
 
 	public abstract long getDateInMilliseconds();
 
@@ -452,24 +489,24 @@ public abstract class BasicTweet implements Tweet {
 		return isLegal(text);
 	}
 
-//	public String getIndexLine() {
-//
-//		StringBuilder sb = new StringBuilder();
-//		String cleanText = getCleanTweet();
-//
-//		for (String hashtag : getHashtagsList()) {
-//
-//			sb.append(hashtag).append("\t").append(getText()).append("\t")
-//					.append(getRelatedHashtags(hashtag)).append("\t");
-//			sb.append(cleanText).append("\t");
-//			for (String t : getHashtagsList()) {
-//				sb.append(Hashtags.getInstance().get(t).getSegmentedHashtag())
-//						.append(", ");
-//			}
-//			sb.append("\n");
-//		}
-//		return sb.toString();
-//	}
+	// public String getIndexLine() {
+	//
+	// StringBuilder sb = new StringBuilder();
+	// String cleanText = getCleanTweet();
+	//
+	// for (String hashtag : getHashtagsList()) {
+	//
+	// sb.append(hashtag).append("\t").append(getText()).append("\t")
+	// .append(getRelatedHashtags(hashtag)).append("\t");
+	// sb.append(cleanText).append("\t");
+	// for (String t : getHashtagsList()) {
+	// sb.append(Hashtags.getInstance().get(t).getSegmentedHashtag())
+	// .append(", ");
+	// }
+	// sb.append("\n");
+	// }
+	// return sb.toString();
+	// }
 
 	@Override
 	public String toString() {
@@ -528,8 +565,7 @@ public abstract class BasicTweet implements Tweet {
 		// }
 
 		throw new UnsupportedOperationException();
-		
-		
+
 	}
 
 	protected void removeNewLinesAndTabs() {
