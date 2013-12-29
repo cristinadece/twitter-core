@@ -34,7 +34,7 @@
 		<dependency>
 			<groupId>org.twitter4j</groupId>
 			<artifactId>twitter4j-core</artifactId>
-			<version>3.0.4-SNAPSHOT</version>
+			<version>3.0.5</version>
 		</dependency>
 
 		<!-- language detection, manually installed from http://code.google.com/p/language-detection/issues/detail?id=3 -->
@@ -55,7 +55,7 @@
 		<dependency>
 			<groupId>org.twitter4j</groupId>
 			<artifactId>twitter4j-stream</artifactId>
-			<version>3.0.4-SNAPSHOT</version>
+			<version>3.0.5</version>
 		</dependency>
 
 		<dependency>
