@@ -9,7 +9,7 @@
 		<dependency>
 			<groupId>it.cnr.isti.hpc</groupId>
 			<artifactId>hpc-utils</artifactId>
-			<version>0.0.4</version>
+			<version>0.0.5</version>
 		</dependency>
 
 
