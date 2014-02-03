@@ -207,12 +207,12 @@ public class TwitterDownload extends StatusAdapter {
 				removeOldDumpFiles();
 
 				String filename = dumpDir.getPath() + "/" + rootfile + d
-						+ ".txt.gz";
+						+ ".json.gz";
 				int i = 0;
 				File ff = new File(filename);
 				if (ff.exists()) {
 					filename = dumpDir.getPath() + "/" + rootfile + d + "-" + i
-							+ ".txt.gz";
+							+ ".json.gz";
 					ff = new File(filename);
 					i++;
 				}
@@ -256,6 +256,8 @@ public class TwitterDownload extends StatusAdapter {
 
 			private boolean isOld(File f) {
 				String name = f.getName();
+				if (!name.endsWith("json.gz"))
+					return false;
 				String dt = name.substring(rootfile.length(),
 						rootfile.length() + 8);
 				Date filedate = DateUtils.getDate(dt);
