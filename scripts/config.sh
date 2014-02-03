@@ -8,7 +8,7 @@ LOG=INFO
 LOGAT=1000
 CLI=it.cnr.isti.hpc.twitter.cli
 E_BADARGS=65
-HTML_LOG=/data/twitter/logs/
+HTML_LOG=/data/tweets/logs/
 
 
 JAVA="java $XMX -Dlogfile=$HTML_LOG -Dlogat=$LOGAT -Dlog=$LOG -cp .:./target/$PROJECT_NAME-$VERSION-jar-with-dependencies.jar "
