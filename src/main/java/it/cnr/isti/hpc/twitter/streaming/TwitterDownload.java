@@ -115,8 +115,6 @@ public class TwitterDownload extends StatusAdapter {
 	public TwitterDownload(String dirName) {
 		super();
 		init(dirName);
-		fileLifespanInMillis = (long) properties
-				.getInt("file.lifespan.in.days") * 24 * 60 * 60 * 1000;
 
 	}
 
@@ -136,6 +134,8 @@ public class TwitterDownload extends StatusAdapter {
 						properties.get("oauth.accessTokenSecret"))
 				.setGZIPEnabled(true);
 
+		fileLifespanInMillis = (long) properties
+				.getInt("file.lifespan.in.days") * 24 * 60 * 60 * 1000;
 		TwitterStreamFactory tf = new TwitterStreamFactory(cb.build());
 		twitter = tf.getInstance();
 		logger.info("authorization enabled: {}", twitter.getAuthorization()
