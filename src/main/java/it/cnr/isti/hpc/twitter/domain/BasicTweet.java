@@ -452,11 +452,11 @@ public abstract class BasicTweet implements Tweet {
 	 * @return true, if the twit contains at least an alphabetic char, otherwise
 	 *         false
 	 */
-	protected static boolean isLegal(String twit) {
-		twit = twit.toLowerCase();
+	protected static boolean isLegal(String tweet) {
+		tweet = tweet.toLowerCase();
 		int i = 0;
-		while (i < twit.length()) {
-			if ((twit.charAt(i) >= 'a') && (twit.charAt(i) <= 'z')) {
+		while (i < tweet.length()) {
+			if ((tweet.charAt(i) >= 'a') && (tweet.charAt(i) <= 'z')) {
 				return true;
 			}
 			i++;

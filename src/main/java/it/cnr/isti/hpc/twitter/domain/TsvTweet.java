@@ -27,12 +27,12 @@ import java.util.Scanner;
  * only text, hashtags, and creation time. Fields (text, hashtags, time in long
  * format) are encoded using tabs, e.g.,
  * 
- * <code>#mariomonti Non so sar� scarso \t #mariomonti \t 1234567890
+ * <code>#mariomonti Non so sara scarso \t #mariomonti \t 1234567890
  * 
  * @author Diego Ceccarelli, diego.ceccarelli@isti.cnr.it created on 09/gen/2012
  */
 public class TsvTweet extends BasicTweet implements Tweet {
-	
+
 	private List<String> rawHashtags = Collections.emptyList();
 	private transient List<String> hashtags = Collections.emptyList();
 	private long date;
@@ -57,9 +57,9 @@ public class TsvTweet extends BasicTweet implements Tweet {
 		if (!isLegal()) {
 			throw new InvalidTweetException("invalid tweet");
 		}
-		
+
 		parseHashtags(fields[1]);
-		
+
 		try {
 			date = Long.parseLong(fields[2]);
 		} catch (NumberFormatException e) {
@@ -70,22 +70,22 @@ public class TsvTweet extends BasicTweet implements Tweet {
 		removeNewLinesAndTabs();
 
 	}
-	
-	public TsvTweet(String text, String hashtagsLine, long date){
+
+	public TsvTweet(String text, String hashtagsLine, long date) {
 		this.text = text;
 		parseHashtags(hashtagsLine);
 		this.date = date;
 		removeNewLinesAndTabs();
 	}
-	
-	public TsvTweet(String text, String hashtagsLine){
+
+	public TsvTweet(String text, String hashtagsLine) {
 		this.text = text;
 		parseHashtags(hashtagsLine);
 		this.date = 0;
 		removeNewLinesAndTabs();
 	}
-	
-	private void parseHashtags(String hashtagsLine){
+
+	private void parseHashtags(String hashtagsLine) {
 		if (!hashtagsLine.isEmpty()) {
 			Scanner s = new Scanner(hashtagsLine);
 			this.hashtags = new ArrayList<String>(10);
@@ -106,9 +106,9 @@ public class TsvTweet extends BasicTweet implements Tweet {
 
 	@Override
 	public List<String> getHashtagsList() {
-		if (hashtags == null){
+		if (hashtags == null) {
 			hashtags = new ArrayList<String>();
-			for (String ht : getRawHashtagsList()){
+			for (String ht : getRawHashtagsList()) {
 				hashtags.add(ht.toLowerCase());
 			}
 		}
@@ -120,12 +120,18 @@ public class TsvTweet extends BasicTweet implements Tweet {
 		return rawHashtags;
 	}
 
-	
-
 	public String getUsername() {
 		throw new UnsupportedOperationException();
 	}
 
+	public boolean hasGeo() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 
+	public boolean hasPlace() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 
 }

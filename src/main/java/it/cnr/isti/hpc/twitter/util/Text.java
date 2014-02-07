@@ -46,16 +46,17 @@ public class Text {
 	 */
 	private static final Logger logger = LoggerFactory.getLogger(Text.class);
 
-	private String text;
+	private final String text;
 
 	private static Detector languageDetector;
-	
-	private static TwitterProperties properties = TwitterProperties.getInstance();
 
-	private List<String> stopEnglish = Arrays.asList(new String[] { "about",
-			"above", "above", "across", "after", "afterwards", "again",
-			"against", "all", "almost", "alone", "along", "already", "also",
-			"although", "always", "am", "among", "amongst", "amoungst",
+	// private static TwitterProperties properties = TwitterProperties
+	// .getInstance();
+
+	private final List<String> stopEnglish = Arrays.asList(new String[] {
+			"about", "above", "above", "across", "after", "afterwards",
+			"again", "against", "all", "almost", "alone", "along", "already",
+			"also", "although", "always", "am", "among", "amongst", "amoungst",
 			"amount", "an", "and", "another", "any", "anyhow", "anyone",
 			"anything", "anyway", "anywhere", "are", "around", "as", "at",
 			"back", "be", "became", "because", "become", "becomes", "becoming",
@@ -100,10 +101,10 @@ public class Text {
 			"would", "yet", "you", "your", "yours", "yourself", "yourselves",
 			"the" });
 
-	private List<String> stopItalian = Arrays.asList(new String[] { "adesso",
-			"ai", "al", "alla", "allo", "allora", "altre", "altri", "altro",
-			"anche", "ancora", "avere", "aveva", "avevano", "ben", "buono",
-			"che", "chi", "cinque", "comprare", "con", "consecutivi",
+	private final List<String> stopItalian = Arrays.asList(new String[] {
+			"adesso", "ai", "al", "alla", "allo", "allora", "altre", "altri",
+			"altro", "anche", "ancora", "avere", "aveva", "avevano", "ben",
+			"buono", "che", "chi", "cinque", "comprare", "con", "consecutivi",
 			"consecutivo", "cosa", "cui", "da", "del", "della", "dello",
 			"dentro", "deve", "devo", "di", "doppio", "due", "e", "ecco",
 			"fare", "fine", "fino", "fra", "gente", "giu", "ha", "hai",
@@ -130,9 +131,9 @@ public class Text {
 	public static String getLanguage(String text) {
 		if (languageDetector == null) {
 			try {
-				
-				String p = properties.getProperty("language.profiles.folder");
-				
+
+				String p = "./src/main/resources/languages/profiles";
+
 				logger.info("loading language profiles in {}", p);
 				DetectorFactory.loadProfile(p);
 			} catch (LangDetectException e) {
@@ -147,13 +148,14 @@ public class Text {
 			}
 		}
 		languageDetector.append(text);
+
 		try {
 			String language = languageDetector.detect();
 			// clean the language detector (i cannot find a reset() method)
 			languageDetector = DetectorFactory.create();
 			return language;
 		} catch (LangDetectException e) {
-			logger.error("detecting the language ({}) ", e.toString());
+			// logger.error("detecting the language ({}) ", e.toString());
 			return "";
 		}
 	}
@@ -182,11 +184,11 @@ public class Text {
 		return getLanguage(s).equals("it");
 	}
 
-	public List<String> getTerms()  {
+	public List<String> getTerms() {
 		List<String> terms = new ArrayList<String>();
 		try {
 			((StandardTokenizer) tokenStream).reset(new StringReader(text));
-			TokenStream ts = (TokenStream) tokenStream;
+			TokenStream ts = tokenStream;
 
 			TermAttribute termAttribute = ts.getAttribute(TermAttribute.class);
 			// add a triple for each of the tokens
@@ -199,7 +201,7 @@ public class Text {
 
 			}
 		} catch (IOException e) {
-			logger.error("Error tokening the terms in string ({})",text);
+			logger.error("Error tokening the terms in string ({})", text);
 			return Collections.emptyList();
 		}
 		return terms;

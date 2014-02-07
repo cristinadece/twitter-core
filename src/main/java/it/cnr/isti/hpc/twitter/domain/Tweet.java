@@ -15,7 +15,6 @@
  */
 package it.cnr.isti.hpc.twitter.domain;
 
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -32,32 +31,35 @@ public interface Tweet {
 	 */
 	public abstract String getText();
 
+	public abstract boolean hasGeo();
+
+	public abstract boolean hasPlace();
+
 	/**
 	 * Returns the text of the tweet without mentions or contextual hashtags &
 	 * the inline hashtags are segmented
 	 * 
 	 * @return the text of the tweet
 	 */
-//	public abstract String getTextWithoutContextualHashtags();
-	
+	// public abstract String getTextWithoutContextualHashtags();
+
 	/**
-	 * Returns the text of a string without mentions 
+	 * Returns the text of a string without mentions
 	 * 
 	 * @return the text without mentions
-	 */	
-	
-//	public abstract String getTextWithoutOneContextualHashtag(String contextualHt);
-	
+	 */
+
+	// public abstract String getTextWithoutOneContextualHashtag(String
+	// contextualHt);
+
 	/**
-	 * Returns the text of a tweet  without one hashtag passed as paramether
+	 * Returns the text of a tweet without one hashtag passed as paramether
 	 * 
 	 * @return the text without mentions
-	 */	
-	
-	
-//	public abstract String getTextWithoutMentions(String s);
-	
-	
+	 */
+
+	// public abstract String getTextWithoutMentions(String s);
+
 	/**
 	 * Returns the nickname of the author of the tweet
 	 * 
@@ -105,7 +107,7 @@ public interface Tweet {
 	 * 
 	 * @return a list containing the segmented hashtags
 	 */
-//	public abstract String getSegmentedHashtags();
+	// public abstract String getSegmentedHashtags();
 
 	/**
 	 * Returns the date of creation of the tweets in milliseconds
@@ -234,7 +236,7 @@ public interface Tweet {
 	 * @throws InvalidTweetException
 	 * @throws IOException
 	 */
-//	public abstract String getIndexLine();
+	// public abstract String getIndexLine();
 
 	/**
 	 * Given an hashtag in the tweet, returns a string containing other hashtags
@@ -247,8 +249,5 @@ public interface Tweet {
 	public abstract String getRelatedHashtags(String hashtag);
 
 	public abstract String toJson();
-	
-	
-	
 
 }
