@@ -60,44 +60,44 @@
 		</div>
 		<div class="col-md-9">
         <p class="lead" style="margin-top:50px">
-			HPC Twitter Dumps allows to download the 10% of the daily stream of tweets produced by Twitter. The tweets are a random sample of the tweets 
-			of Twitter and are downloaded thanks to the <emph> Garden Hose </emph> streaming API provided by Twitter.	 <br/>
+			HPC Twitter Dumps allows to download the 10% of the daily stream of tweets produced on Twitter. The tweets are a random sample of the tweets 
+			in Twitter and are downloaded thanks to the <emph> Garden Hose </emph> Streaming API provided by Twitter.	 <br/>
 			<br/>
-			We would like to share the tweets with all the CNR researchers but since we signed an agreement we ask you to <a href="#contactus">send an email</a>.
+			We would like to share the tweets with all the CNR researchers interrested, but since we signed an agreement regarding the data usage policy, we kindly ask you to <a href="#contactus">send us an email</a> to let us know that you are using the data and with what intention.
 			if you plan to use the tweets.
 		</p>
 		<a name="datasets"></a>
-		<h2 style="text-align:center">Available dumps</h2>
+		<h2 style="text-align:center">Available dumps (repositories)</h2>
 		<p> We split the tweets in one file per day, each file is encoded in <a href="http://www.json.org/">JSON</a>. More in detail, each line of a file represents
 		a tweet encoded in JSON. You can read the file line per line, decoding each line from JSON to an object representing the tweet (Please note that there
-		are libraries for doing that, you don't have to write your parser). </p>
+		are libraries for doing that, you don't have to write your own parser). </p>
 		<p> Every day we collect all the 10% of the tweets provided by the streaming API in on unique file, the compressed file size is ~20G and it contains 
 			approx 40M of tweets </p>
-		<p> Since you probably don't want all the tweets, we provide others <strong>filtered dumps</strong> which probably match your needs. If you need other filters please <a href="#contactus">let us know</a></p> 
+		<p> Since you probably don't want all the tweets, we provide others <strong>filtered dumps</strong> which probably match your needs. If you need other filters please <a href="#contactus">let us know</a>.</p> 
 		
-		<h4><strong>Please, do not download the full dump files because the download could interfere with the current download from the streaming API, 
-		if you need the full dump <a href="#contactus">contact us</a> </strong></h4>
+		<h4><strong>Please do not download the full dump files because the download could interfere with the current download from the streaming API or stop the process. 
+		If you need the full dump, please <a href="#contactus">contact us</a>. </strong></h4>
 		
 		<p> The available dumps are: 
 			<table>
 				<tr>
-				<th style="width:150px"> Name </th>
-				<th style="width:300px"> Description</th>
-				<th style="width:250px"> Approx Size</th>
-				<th> Link </th>
-			</tr>
-			<tr>
-				<td> English Dump </td> <td> Contains only the tweets written in English (language is predicted using <a href="https://code.google.com/p/language-detection/">this library</a>)</td><td>6/7GB (compressed) per day, 15M tweets per day</td><td><a href="http://rojo.isti.cnr.it/tweets/english-tweets/"> LINK</a> </td> 
+					<th style="width:150px"> Name </th>
+					<th style="width:300px"> Description</th>
+					<th style="width:250px"> Approx Size</th>
+					<th> Link </th>
+				</tr>
+				<tr>
+					<td> English Dump </td> <td> Contains only the tweets written in English (language is predicted using <a href="https://code.google.com/p/language-detection/">this library</a>)</td><td>6/7GB (compressed) per day, 15M tweets per day</td><td><a href="http://rojo.isti.cnr.it/tweets/english-tweets/"> LINK</a> </td> 
 				</tr>
 				<tr>
 					<td> Italian Dump </td> <td> Contains only the tweets written in Italian </td><td> 250Mb (compressed) per day, 600K tweets per day</td><td> <a href="http://rojo.isti.cnr.it/tweets/italian-tweets/"> LINK</a> </td> 
-					</tr>
-					<tr>
-						<td> Georef Dump </td> <td> Contains only the tweets containing geotags latitude/longitude or the place  </td> <td>600/700Mb (compressed) per day, 1M tweets per day</td> <td><a href="http://rojo.isti.cnr.it/tweets/georef-tweets/"> LINK </a></td> 
-						</tr>
-					</table>
+				</tr>
+				<tr>
+					<td> Georef Dump </td> <td> Contains only the tweets containing geotags latitude/longitude or the place  </td> <td>600/700Mb (compressed) per day, 1M tweets per day</td> <td><a href="http://rojo.isti.cnr.it/tweets/georef-tweets/"> LINK </a></td> 
+				</tr>
+			</table>
 			
-					<h4><strong>Please note that this page and the dumps are accessible only from ISTI-CNR ip addresses (146.48.80.1/21), if you need to access the dumps from a different ip-addresses please <a href="#contactus">contact us</a> </strong></h4>
+					<h4><strong>Please note that this page and the dumps are accessible only from ISTI-CNR IP addresses (146.48.80.1/21), if you need to access the dumps from a different IP-address please <a href="#contactus">contact us</a>. </strong></h4>
 		
 					<a name="contactus"></a>
 					<h2 style="text-align:center">Contact us</h2>
