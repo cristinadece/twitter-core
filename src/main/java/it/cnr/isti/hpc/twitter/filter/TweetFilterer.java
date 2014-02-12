@@ -81,6 +81,10 @@ public class TweetFilterer {
 
 	public boolean canProcess(String filename) {
 		Date date = getDate(filename);
+		if (date == null) {
+			logger.warn("no date for file {} ", filename);
+			return false;
+		}
 		Date now = Calendar.getInstance().getTime();
 		// must be greater than 25 hours
 		return now.getTime() - date.getTime() > 90000000; // 60*60*25*10000;
@@ -172,6 +176,7 @@ public class TweetFilterer {
 			}
 
 		}
+		logger.info("FINISH processing file {}", input);
 
 		bw.close();
 
