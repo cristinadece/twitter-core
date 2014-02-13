@@ -63,7 +63,7 @@
 			HPC Twitter Dumps allows to download the 10% of the daily stream of tweets produced on Twitter. The tweets are a random sample of the tweets 
 			in Twitter and are downloaded thanks to the <emph> Garden Hose </emph> Streaming API provided by Twitter.	 <br/>
 			<br/>
-			We would like to share the tweets with all the CNR researchers interested, but since we signed an agreement regarding the data usage policy, we kindly ask you to <a href="#contactus">send us an email</a> to let us know that you are using the data and with what intention.
+			We would like to share the tweets with all the CNR researchers interested, but since we signed an agreement regarding the data usage policy, we kindly ask you to <a href="#contactus">send us an email</a> with your IP, in order to grant you access to the data.
 		</p>
 		<a name="datasets"></a>
 		<h2 style="text-align:center">Available dumps (repositories)</h2>
@@ -72,10 +72,10 @@
 		are libraries for doing that, you don't have to write your own parser). </p>
 		<p> Every day we collect all the 10% of the tweets provided by the streaming API in on unique file, the compressed file size is ~20G and it contains 
 			approx 40M of tweets </p>
-		<p> Since you probably don't want all the tweets, we provide others <strong>filtered dumps</strong> which probably match your needs. If you need other filters please <a href="#contactus">let us know</a>.</p> 
+		<p> Since you probably don't want all the tweets, we provide <strong>filtered dumps</strong> which may match your needs. If you need other filters or the full dump please <a href="#contactus">let us know</a>.</p> 
 		
-		<h4><strong>Please do not download the full dump files because the download could interfere with the current download from the streaming API or stop the process. 
-		If you need the full dump, please <a href="#contactus">contact us</a>. </strong></h4>
+		<!-- <h4><strong>Please do not download the full dump files because the download could interfere with the current download from the streaming API or stop the process. 
+		If you need the full dump, please <a href="#contactus">contact us</a>. </strong></h4> -->
 		
 		<p> The available dumps are: 
 			<table>
@@ -97,8 +97,14 @@
 			</table>
 			
 					<h4><strong>Please note that this page and the dumps are accessible only from ISTI-CNR IP addresses (146.48.80.1/21), if you need to access the dumps from a different IP-address please <a href="#contactus">contact us</a>. </strong></h4>
+
+		<a name="scripts"></a>
+		<h2 style="text-align:center">Useful scripts and commands</h2>
+
+					<p>In order to download all the files belonging to a filter, please use the following command. Edit it by inserting the link to the directory of your interest as in the following example:</p>
+					<p>Download all: <strong><code>wget -r --no-parent --reject "index.html*" http://rojo.isti.cnr.it/tweets/english-tweets/</code></strong></p>
 		
-					<a name="contactus"></a>
+		<a name="contactus"></a>
 					<h2 style="text-align:center">Contact us</h2>
 					<p> If you need additional filters, more info, the full dumps or any other information you can contact Diego Ceccarelli (diego.ceccarelli@isti.cnr.it) or Cristina Muntean (cristina.muntean@isti.cnr.it). 
 					</p>
