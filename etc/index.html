@@ -100,18 +100,21 @@
 
 		<a name="scripts"></a>
 		<h2 style="text-align:center">Useful scripts and commands</h2>
-					<h5>***Dowloading files from a filter directory</h5>
+					<h3>Dowloading files from a filter directory</h3>
 						<p>In order to download all the files belonging to a filter, please use the following command. Edit it by inserting the link to the directory of your interest as in the following example:</p>
 						<p><strong><code>wget -r --no-parent --reject "index.html*" http://rojo.isti.cnr.it/tweets/english-tweets/</code></strong></p>
 					<br>
-					<h5>***Converting JSON to CSV</h5>
+					<h3>Converting JSON to CSV</h3>
 						<p>In order to convert JSON to CSV, first decide upon which fields you are interested in. To better view your data, copy a JSON line (a tweet) and paste it in a <strong>JSON viewer</strong> (we use: <a href="http://jsonviewer.stack.hu/">http://jsonviewer.stack.hu/</a>).</p>
 						<p>After deciding the fields please download JQ utility from: <strong><a href="http://stedolan.github.io/jq/" target="_blank">http://stedolan.github.io/jq/</a></strong> (for a deeping understanding of JQ please consult the manual at <a href="http://stedolan.github.io/jq/manual/" target="_blank">http://stedolan.github.io/jq/manual/</a>) and make it an executable with <code>chmod +x jq</code>.</p>
 
 						<p>At this point, you should be able to proceed with actually converting JSON to CSV. Follow the following generic example:</p>
-						<p>---To convert the first 10 tweets: <code width="200">gzcat georef-tweets-20140204.json.gz | ./jq '[.text,.geo.coordinates[0],.geo.coordinates[1],<br>.place.name,.user.name,.user.screen_name,.created_at] | @csv' | head -10 > output.csv</code></p>
+						
+						<h4>To convert the first 10 tweets:</h4>
+						 <code width="200">gzcat georef-tweets-20140204.json.gz | ./jq '[.text,.geo.coordinates[0],.geo.coordinates[1],<br>.place.name,.user.name,.user.screen_name,.created_at] | @csv' | head -10 > output.csv</code>
 
-						<p>---To convert the entire file: <code>gzcat georef-tweets-20140204.json.gz | ./jq '[.text,.geo.coordinates[0],.geo.coordinates[1],<br>.place.name,.user.name,.user.screen_name,.created_at] | @csv' > output.csv</code></p>
+						<h4>To convert the entire file:</h4> 
+						<code>gzcat georef-tweets-20140204.json.gz | ./jq '[.text,.geo.coordinates[0],.geo.coordinates[1],<br>.place.name,.user.name,.user.screen_name,.created_at] | @csv' > output.csv</code>
 						<p>Please note that you should first identify the fields you are interested in (e.g "places.name") and then indicate them as in the previous examples. Inside output.csv you can see the tweets with the selected fields in a CSV format.</p>
 
 		
