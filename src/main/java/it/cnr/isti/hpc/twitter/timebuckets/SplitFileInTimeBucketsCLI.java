@@ -120,9 +120,10 @@ public class SplitFileInTimeBucketsCLI extends AbstractCommandLineInterface {
 			// if it fits in the current interval, we write it in the current file
 			currentTime = JsonTweet.parseTweetFromJson(line).getDateInMilliseconds();
 			if ((currentTime > timePointer) && (currentTime < (timePointer + interval))){
-				out.write(line);
-				out.write("\n");
-				
+				if (JsonTweet.parseTweetFromJson(line).isItalian()){
+					out.write(line);
+					out.write("\n");
+				}
 			}
 			else {
 				//change pointer to the next interval 
@@ -131,8 +132,10 @@ public class SplitFileInTimeBucketsCLI extends AbstractCommandLineInterface {
 				//open a new file for writing
 				outputFileString = cli.getOutput() + timePointer+ ".json.gz";
 				out = IOUtils.getPlainOrCompressedUTF8Writer(outputFileString);
-				out.write(line);
-				out.write("\n");
+				if (JsonTweet.parseTweetFromJson(line).isItalian()){
+					out.write(line);
+					out.write("\n");
+				}
 			}
 		}
 	}
