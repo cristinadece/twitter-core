@@ -30,7 +30,7 @@ public class SplitFileInTimeBucketsCLI extends AbstractCommandLineInterface {
 	private static final Logger logger = LoggerFactory
 			.getLogger(SplitFileInTimeBucketsCLI.class);
 
-	private static final String USAGE = "java -cp $jar " + TweetStatsCLI.class
+	private static final String USAGE = "java -cp $jar " + SplitFileInTimeBucketsCLI.class
 			+ " -input originalTweetFile -output output-folder -interval timeInMilisInterval";
 
 	private static String[] params = new String[] { INPUT, OUTPUT, "interval" };
