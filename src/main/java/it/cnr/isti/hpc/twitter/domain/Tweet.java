@@ -140,6 +140,14 @@ public interface Tweet {
 	 * @return the list of terms appearing in a tweet
 	 */
 	public abstract List<String> getTerms();
+	
+	/**
+	 * Returns the ID of a tweet .
+	 * 
+	 * @return string containing ID
+	 */
+	public abstract String getId();
+
 
 	/**
 	 * Tests if the tweet contains hashtags.

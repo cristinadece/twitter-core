@@ -148,7 +148,18 @@ public class JsonTweet extends BasicTweet implements Tweet {
 
 	public class User {
 		private String name;
+		private String id;
 		private String screen_name;
+		
+		
+
+		public String getId() {
+			return id;
+		}
+
+		public void setId(String id) {
+			this.id = id;
+		}
 
 		public String getScreen_name() {
 			return screen_name;
@@ -861,6 +872,10 @@ public class JsonTweet extends BasicTweet implements Tweet {
 		String json = IOUtils.getFileAsString("/tmp/test.json");
 		JsonTweet t = JsonTweet.parseTweetFromJson(json);
 		System.out.println(gson.toJson(t));
+	}
+
+	public String getId() {
+		return id;
 	}
 
 }

@@ -154,6 +154,14 @@ public class SplitFileInTimeBucketsCLI extends AbstractCommandLineInterface {
 			IOException {
 		SplitFileInTimeBucketsCLI cli = new SplitFileInTimeBucketsCLI(args);
 		interval = Long.parseLong(cli.getParam("interval"));
+		
+		// check if output folder exists
+		File outputFolder = new File(cli.getOutput());
+		if (!outputFolder.exists()) {
+			logger.error("cannot input dir {}", outputFolder.getAbsolutePath());
+			System.exit(-1);
+		}
+		
 		dumpTweetBucket(cli);
 		deleteOlderFiles(cli);
 	}

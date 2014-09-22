@@ -50,6 +50,8 @@ public abstract class BasicTweet implements Tweet {
 			.getLogger(BasicTweet.class);
 
 	protected String text; // text of the twit
+	
+	protected String id;
 
 	public String getText() {
 		return text;

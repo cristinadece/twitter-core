@@ -134,4 +134,8 @@ public class TsvTweet extends BasicTweet implements Tweet {
 		return false;
 	}
 
+	public String getId() {
+		return id;
+	}
+
 }
