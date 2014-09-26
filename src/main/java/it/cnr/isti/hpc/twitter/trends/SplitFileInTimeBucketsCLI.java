@@ -105,6 +105,8 @@ public class SplitFileInTimeBucketsCLI extends AbstractCommandLineInterface {
 					Thread.sleep(LOOP_DELAY);
 					line = cli.readLineFromInput();
 					if (line == null) {
+						logger.info("Line is NULL");
+						out.flush();
 						out.close();
 						Thread.interrupted();
 						break;
@@ -163,6 +165,6 @@ public class SplitFileInTimeBucketsCLI extends AbstractCommandLineInterface {
 		}
 		
 		dumpTweetBucket(cli);
-		deleteOlderFiles(cli);
+		//deleteOlderFiles(cli);
 	}
 }

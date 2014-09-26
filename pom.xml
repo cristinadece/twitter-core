@@ -20,8 +20,19 @@
 			<scope>test</scope>
 		</dependency>
 
+		<!-- used for the Twokenizer in Utils -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.3.2</version>
+		</dependency>
 
-
+		<!-- used for computing Mean and Variance in Trends -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-math3</artifactId>
+			<version>3.0</version>
+		</dependency>
 
 		<dependency>
 			<groupId>junidecode</groupId>
