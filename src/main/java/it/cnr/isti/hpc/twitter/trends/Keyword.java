@@ -17,9 +17,45 @@ public class Keyword {
 	private LinkedHashMap<String, Integer> bucketFrequency;
 	private List<String> tweetIds;
 	private List<String> userIds;
+	private List<String> first50tweets;
+	private double zscore;
+	private double basefreq;
 	
 	
 	
+	public List<String> getFirst50tweets() {
+		return first50tweets;
+	}
+
+	public void setFirst50tweets(List<String> first50tweets) {
+		this.first50tweets = first50tweets;
+	}
+	
+	public void addFirst50tweets(String tweet){
+		if (this.first50tweets.size()<=50){
+			if (!this.first50tweets.contains(tweet)){
+				this.first50tweets.add(tweet);
+			}
+		}
+	}
+
+
+	public double getZscore() {
+		return zscore;
+	}
+
+	public void setZscore(double zscore) {
+		this.zscore = zscore;
+	}
+
+	public double getBasefreq() {
+		return basefreq;
+	}
+
+	public void setBasefreq(double basefreq) {
+		this.basefreq = basefreq;
+	}
+
 	public String getName() {
 		return name;
 	}
@@ -79,6 +115,7 @@ public class Keyword {
 		bucketFrequency = new LinkedHashMap<String, Integer>();
 		tweetIds = new ArrayList<String>();
 		userIds = new ArrayList<String>();
+		first50tweets = new ArrayList<String>();
 	}
 	
 	public Keyword(String word) {
@@ -87,19 +124,22 @@ public class Keyword {
 		bucketFrequency = new LinkedHashMap<String, Integer>();
 		tweetIds = new ArrayList<String>();
 		userIds = new ArrayList<String>();
+		first50tweets = new ArrayList<String>();
 	}
 	
-	public Keyword(String word, String interval, String tweetId, String userID) {
+	public Keyword(String word, String interval, String tweetId, String userID, String tweet) {
 		
 		//init
 		bucketFrequency = new LinkedHashMap<String, Integer>();
 		tweetIds = new ArrayList<String>();
 		userIds = new ArrayList<String>();
+		first50tweets = new ArrayList<String>();
 		
 		name = word;
 		bucketFrequency.put(interval, 1);
 		tweetIds.add(tweetId);
 		userIds.add(userID);
+		first50tweets.add(tweet);
 	}
 
 	public static void main(String[] args) {

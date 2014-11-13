@@ -31,12 +31,19 @@ import org.apache.lucene.analysis.standard.StandardTokenizer;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.util.Version;
 
+import com.google.gson.Gson;
+
 /**
- * This script is run for all files in a directory - a for in shell We delete
- * buckets older than 7 days
+ * This script is run for all files in a directory - a for in shell 
+ * We delete buckets older than 7 days
+ * 
+ * To create time buckets we must first run the script: makeBuckets.sh
+ * This script splits each new tweet file downloaded from the Twitter 
+ * Streaming API into smaller time buckets and puts everything in one
+ * folder: buckets/
  * 
  * Call: java -cp $jar class
- * it.cnr.isti.hpc.twitter.cli.SplitFileInTimeBucketsCLI -input timeBucketFile
+ * it.cnr.isti.hpc.twitter.cli.SplitFileInTimeBucketsCLI -input timeBucketFolder
  * -output wordcountFile
  */
 
@@ -78,7 +85,9 @@ public class WordFrequencyCLI extends AbstractCommandLineInterface {
 
 	private HashMap<String, Keyword> wordMap;
 
-	private HashMap<String, Keyword> burstyMap;
+	//private HashMap<String, Keyword> burstyMap;
+	
+	Gson gson = new Gson();
 
 	public WordFrequencyCLI() {
 
@@ -86,7 +95,7 @@ public class WordFrequencyCLI extends AbstractCommandLineInterface {
 
 	public void init() {
 		wordMap = new HashMap<String, Keyword>();
-		burstyMap = new HashMap<String, Keyword>();
+		//burstyMap = new HashMap<String, Keyword>();
 	}
 
 	public List<String> cleanTweetText(String tweetText) {
@@ -221,7 +230,6 @@ public class WordFrequencyCLI extends AbstractCommandLineInterface {
 		return timeinmilis;
 	}
 
-	
 	public void countOccurences(String f, boolean isFirstFile)
 			throws IOException, InvalidTweetException {
 
@@ -230,14 +238,11 @@ public class WordFrequencyCLI extends AbstractCommandLineInterface {
 		String row;
 		JsonTweet tweet;
 		Keyword kw;
-
+		
 		String timestamp = getTimeinMilisFromFilename(f);
-		int count = 0;
+		
 		while ((row = bfr.readLine()) != null) {
-			count++;
-
 			tweet = JsonTweet.parseTweetFromJson(row);
-
 			List<String> tweetWords = cleanTweetText(tweet.getText());
 
 			for (String word : tweetWords) {
@@ -246,10 +251,13 @@ public class WordFrequencyCLI extends AbstractCommandLineInterface {
 					kw.addBucketFrequency(timestamp, 1);
 					kw.addUserId(tweet.getUsers().getId());
 					kw.addTweetId(tweet.getId());
+					if (isFirstFile){
+						kw.addFirst50tweets(row);
+					}
 				} else {
 					if (isFirstFile) {
 						kw = new Keyword(word, timestamp, tweet.getId(), tweet.getUsers()
-								.getId());
+								.getId(), row);
 						wordMap.put(word, kw);
 					} else {
 						// we do nothing here as there are words that are in
@@ -305,8 +313,30 @@ public class WordFrequencyCLI extends AbstractCommandLineInterface {
 		}
 		return score;
 	}
+	
+	public String plainTrendFormatting(Keyword kw){
+		String tweets = StringUtils.join(kw.getTweetIds(), "|");
+		String users = StringUtils.join(kw.getUserIds(), "|");
+		StringBuilder sb = new StringBuilder();
+		sb.append(kw.getName()).append("\t").append(tweets).append("\t")
+				.append(users).append("\t").append(kw.getZscore()).append("\t")
+				.append(kw.getBasefreq());
+	
+		return sb.toString();
+	}
+	
+	public String jsonTrendFormatting(Keyword kw){
+		return gson.toJson(kw);
+	}
 
+	
+	// there are words with high frequency but because they are repeated ina tweet
+	// #bassil that may influence the statistics
+							
+	// the words that occur for the first time have zscore = 1.79...E308
+	// meaning infinity - MAXINT
 	public void writeDictionaryFreq(WordFrequencyCLI cli, int interval) {
+		
 		cli.openOutput();
 		double baseFreq;
 		double zscore;
@@ -321,25 +351,16 @@ public class WordFrequencyCLI extends AbstractCommandLineInterface {
 			
 			baseFreq = (double) kw.getBucketFrequency().entrySet().iterator()
 					.next().getValue();
-
 			zscore = getZScore(kw, interval);
 			
-			// there are words with high frequency but because they are repeated ina tweet
-			// #bassil
-			
-			
-			// the words that occur for the first time have zscore = 1.79...E308
+			kw.setBasefreq(baseFreq);
+			kw.setZscore(zscore);
 			
 			if ((Double.compare(zscore, 2.0d) >= 0) && (baseFreq > 10)) {
 				//burstyMap.put(kw.getName(), kw);
+				//cli.writeLineInOutput(plainTrendFormatting(kw));
+				cli.writeLineInOutput(gson.toJson(kw));
 				
-				String tweets = StringUtils.join(kw.getTweetIds(), "|");
-				String users = StringUtils.join(kw.getUserIds(), "|");
-				StringBuilder sb = new StringBuilder();
-				sb.append(kw.getName()).append("\t").append(tweets).append("\t")
-						.append(users).append("\t").append(zscore).append("\t")
-						.append(baseFreq);
-				cli.writeLineInOutput(sb.toString());
 			
 			}
 		}
@@ -353,7 +374,7 @@ public class WordFrequencyCLI extends AbstractCommandLineInterface {
 
 		WordFrequencyCLI cli = new WordFrequencyCLI(args);
 		cli.init();
-		String filterName = cli.getParam("ngram");
+		//String filterName = cli.getParam("ngram");
 
 		File inputFolder = new File(cli.getInput());
 		if (!inputFolder.exists()) {
@@ -397,9 +418,12 @@ public class WordFrequencyCLI extends AbstractCommandLineInterface {
 		}
 
 		// 5. check if they are bursty and put them in bursty map - after some
-		// filters (configurable)
+		// filters (configurable)  
+		// DONE - this in done in cli.writeDictionaryFreq()
+		
 		// TODO 6. check for inclusions (uni,bi,tri):
 		// if uni-bursty included in bi/tri-bursty, keep the longer occurence
+		
 		// 7. print all data, including tweetID and userID
 
 		cli.writeDictionaryFreq(cli, vectorLen);

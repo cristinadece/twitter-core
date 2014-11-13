@@ -22,6 +22,8 @@ import it.cnr.isti.hpc.twitter.util.InvalidTweetException;
  * This script is run for all files in a directory - a for in shell We delete
  * buckets older than 7 days
  * 
+ * This is executed in makeBuckets.sh file
+ * 
  * Call: java -cp $jar class it.cnr.isti.hpc.twitter.cli.SplitFileInTimeBucketsCLI -input
  * originalTweetFile -output output-folder -interval timeInMilisInterval
  */

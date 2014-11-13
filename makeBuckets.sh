@@ -9,6 +9,6 @@ do
 	if test `find $f -mtime -7`
 	then
 		echo "Processing $f"
-		#java -cp $jar it.cnr.isti.hpc.twitter.timebuckets.SplitFileInTimeBucketsCLI -input $f -output /Users/cris/Documents/workspace/analytics/buckets/ -interval 1800000
+		#java -cp $jar it.cnr.isti.hpc.twitter.trends.SplitFileInTimeBucketsCLI -input $f -output /Users/cris/Documents/workspace/analytics/buckets/ -interval 1800000
 	fi
 done
