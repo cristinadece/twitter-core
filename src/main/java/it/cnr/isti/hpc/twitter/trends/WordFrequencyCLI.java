@@ -55,9 +55,9 @@ public class WordFrequencyCLI extends AbstractCommandLineInterface {
 	// maybe eliminate ngrams from param and do all for 1,2,3
 	private static final String USAGE = "java -cp $jar "
 			+ WordFrequencyCLI.class
-			+ " -input timeBucketFolder -output burstyKeywordFile -ngram numberofwordsinaphrase";
+			+ " -input timeBucketFolder -output burstyKeywordFile";
 
-	private static String[] params = new String[] { INPUT, OUTPUT, "ngram" };
+	private static String[] params = new String[] { INPUT, OUTPUT};
 
 	WordFrequencyCLI(String[] args) {
 		super(args, params, USAGE);
@@ -374,8 +374,7 @@ public class WordFrequencyCLI extends AbstractCommandLineInterface {
 
 		WordFrequencyCLI cli = new WordFrequencyCLI(args);
 		cli.init();
-		//String filterName = cli.getParam("ngram");
-
+		
 		File inputFolder = new File(cli.getInput());
 		if (!inputFolder.exists()) {
 			logger.error("cannot input dir {}", inputFolder.getAbsolutePath());
