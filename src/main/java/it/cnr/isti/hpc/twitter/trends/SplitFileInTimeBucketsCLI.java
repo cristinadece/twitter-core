@@ -167,6 +167,6 @@ public class SplitFileInTimeBucketsCLI extends AbstractCommandLineInterface {
 		}
 		
 		dumpTweetBucket(cli);
-		//deleteOlderFiles(cli);
+		deleteOlderFiles(cli);
 	}
 }
