@@ -1,10 +1,15 @@
 package it.cnr.isti.hpc.twitter.trends;
 
+import it.cnr.isti.hpc.cli.AbstractCommandLineInterface;
+import it.cnr.isti.hpc.io.IOUtils;
+import it.cnr.isti.hpc.twitter.domain.JsonTweet;
+import it.cnr.isti.hpc.twitter.streaming.TwitterDownload.DateUtils;
+import it.cnr.isti.hpc.twitter.util.InvalidTweetException;
+
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
-import java.util.Calendar;
-import java.util.Date;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,11 +17,6 @@ import org.slf4j.LoggerFactory;
 import twitter4j.internal.org.json.JSONArray;
 import twitter4j.internal.org.json.JSONException;
 import twitter4j.internal.org.json.JSONObject;
-import it.cnr.isti.hpc.cli.AbstractCommandLineInterface;
-import it.cnr.isti.hpc.io.IOUtils;
-import it.cnr.isti.hpc.twitter.cli.TweetStatsCLI;
-import it.cnr.isti.hpc.twitter.domain.JsonTweet;
-import it.cnr.isti.hpc.twitter.util.InvalidTweetException;
 
 /**
  * This script is run for all files in a directory - a for in shell We delete
@@ -24,7 +24,8 @@ import it.cnr.isti.hpc.twitter.util.InvalidTweetException;
  * 
  * This is executed in makeBuckets.sh file
  * 
- * Call: java -cp $jar class it.cnr.isti.hpc.twitter.cli.SplitFileInTimeBucketsCLI -input
+ * Call: java -cp $jar class
+ * it.cnr.isti.hpc.twitter.cli.SplitFileInTimeBucketsCLI -input
  * originalTweetFile -output output-folder -interval timeInMilisInterval
  */
 
@@ -35,7 +36,7 @@ public class SplitFileInTimeBucketsCLI extends AbstractCommandLineInterface {
 
 	private static final String USAGE = "java -cp $jar "
 			+ SplitFileInTimeBucketsCLI.class
-			+ " -input originalTweetFile -output output-folder -interval timeInMilisInterval";
+			+ " -input full-dump-folder -output output-folder -interval minutes";
 
 	private static String[] params = new String[] { INPUT, OUTPUT, "interval" };
 
@@ -66,7 +67,7 @@ public class SplitFileInTimeBucketsCLI extends AbstractCommandLineInterface {
 			return false;
 		long timeInMilis = Long.parseLong(name.replace(".json.gz", ""));
 		long now = System.currentTimeMillis();
-		return ((now - timeInMilis) > 604800000); // 604800000 = 7 days
+		return ((now - timeInMilis) > interval * 7); // 604800000 = 7 days
 	}
 
 	public static void deleteOlderFiles(SplitFileInTimeBucketsCLI cli) {
@@ -83,74 +84,81 @@ public class SplitFileInTimeBucketsCLI extends AbstractCommandLineInterface {
 	public static void dumpTweetBucket(SplitFileInTimeBucketsCLI cli)
 			throws InvalidTweetException, IOException {
 
-		cli.openInput();
+		String dirname = cli.getInput();
 
-		String firstTweetString = cli.readLineFromInput();
-		long timePointer = JsonTweet.parseTweetFromJson(firstTweetString)
-				.getDateInMilliseconds();
+		BufferedReader br = null;
+		long bucketStartTime = System.currentTimeMillis();
 
-		// initialize current file name with time pointer
-		String outputFileString = cli.getOutput() + timePointer + ".json.gz";
-		BufferedWriter out = IOUtils
-				.getPlainOrCompressedUTF8Writer(outputFileString);
+		File outputFile = new File(cli.getOutput(), bucketStartTime
+				+ ".json.gz");
+		BufferedWriter out = IOUtils.getPlainOrCompressedUTF8Writer(outputFile
+				.getAbsolutePath());
 
-		long currentTime;
+		while (true) {
 
-		boolean done = false;
-		while (!done) {
-			String line = cli.readLineFromInput();
+			File f = new File(dirname, "gardenhose-full-dump-"
+					+ DateUtils.now() + ".json.gz");
+			if (!f.exists()) {
+				logger.error("cannot find {}", f.getAbsolutePath());
 
-			// check if line is valid json, otherwise we may have half of tweet
-			if ((line == null) || (!isJSONValid(line))) {
 				try {
-					logger.info("Line is NULL");
 					Thread.sleep(LOOP_DELAY);
-					line = cli.readLineFromInput();
-					if (line == null) {
-						logger.info("Line is NULL");
-						out.flush();
-						out.close();
-						Thread.interrupted();
-						break;
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				continue;
+			}
+			br = IOUtils.getPlainOrCompressedReader(f.getAbsolutePath());
+
+			// initialize current file name with time pointer
+
+			boolean done = false;
+			while (!done) {
+				String line = br.readLine();
+				long endBucket = bucketStartTime + interval;
+				// check if line is valid json, otherwise we may have half of
+				// tweet
+				if ((line == null) || (!isJSONValid(line))) {
+					try {
+						logger.error("Line is null, sleeping");
+						Thread.sleep(LOOP_DELAY);
+						line = br.readLine();
+						if (line == null) {
+							done = false;
+							break;
+						}
+
+					} catch (InterruptedException e) {
+						logger.error("Error splitting tweet file {} ({})",
+								INPUT, e.toString());
 					}
 
-				} catch (InterruptedException e) {
-					logger.error("Error splitting tweet file {} ({})", INPUT,
-							e.toString());
 				}
-			}
+				JsonTweet tweet = JsonTweet.parseTweetFromJson(line);
+				long currentTweetTime = tweet.getDateInMilliseconds();
 
-			JsonTweet tweet = JsonTweet.parseTweetFromJson(line);
-			currentTime = tweet.getDateInMilliseconds();
+				if ((currentTweetTime >= endBucket)) {
+					out.close();
+					bucketStartTime = System.currentTimeMillis();
 
-			if ((currentTime >= timePointer)) {
-				if (currentTime < (timePointer + interval)) {
+					outputFile = new File(cli.getOutput(), bucketStartTime
+							+ ".json.gz");
+					out = IOUtils.getPlainOrCompressedUTF8Writer(outputFile
+							.getAbsolutePath());
+					endBucket = bucketStartTime + interval;
+					deleteOlderFiles(cli);
+				}
+
+				if ((currentTweetTime > bucketStartTime)
+						&& (currentTweetTime < endBucket)) {
 					if (tweet.isItalian()) {
 						out.write(line);
 						out.write("\n");
 					}
-				} else {
-					// change pointer to the next interval
-					out.close();
-					timePointer = currentTime;
-					// open a new file for writing
-					outputFileString = cli.getOutput() + timePointer
-							+ ".json.gz";
-					out = IOUtils
-							.getPlainOrCompressedUTF8Writer(outputFileString);
-					if ((currentTime >= timePointer)
-							&& (currentTime < (timePointer + interval))) {
-						if (JsonTweet.parseTweetFromJson(line).isItalian()) {
-							out.write(line);
-							out.write("\n");
-						}
-					}
 				}
 
-			} else {
-				logger.info("This tweet isn't orderred chronologically {}", line);
 			}
-
 		}
 	}
 
@@ -158,15 +166,14 @@ public class SplitFileInTimeBucketsCLI extends AbstractCommandLineInterface {
 			IOException {
 		SplitFileInTimeBucketsCLI cli = new SplitFileInTimeBucketsCLI(args);
 		interval = Long.parseLong(cli.getParam("interval"));
-		
+		interval = interval * 60 * 1000; // from minutes to milliseconds
 		// check if output folder exists
 		File outputFolder = new File(cli.getOutput());
 		if (!outputFolder.exists()) {
 			logger.error("cannot input dir {}", outputFolder.getAbsolutePath());
 			System.exit(-1);
 		}
-		
 		dumpTweetBucket(cli);
-		deleteOlderFiles(cli);
+
 	}
 }

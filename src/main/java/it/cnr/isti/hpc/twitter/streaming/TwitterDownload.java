@@ -28,48 +28,6 @@ import twitter4j.TwitterStreamFactory;
 import twitter4j.conf.ConfigurationBuilder;
 import twitter4j.json.DataObjectFactory;
 
-class DateUtils {
-
-	private static final Logger logger = LoggerFactory
-			.getLogger(DateUtils.class);
-	/*
-	 * System.out.println(DateUtils.now("dd MMMMM yyyy"));
-	 * System.out.println(DateUtils.now("yyyyMMdd hh:mm"));
-	 * System.out.println(DateUtils.now("dd.MM.yy"));
-	 * System.out.println(DateUtils.now("MM/dd/yy"));
-	 */
-	public static final String DATE_FORMAT_NOW = "yyyyMMdd";
-
-	// public Writer writer ;
-	// public static String currentDate = "";
-
-	public static String now() {
-
-		Calendar cal = Calendar.getInstance();
-
-		SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_NOW);
-		sdf.setTimeZone(java.util.TimeZone.getTimeZone("GMT"));
-
-		// System.out.println(cal.ZONE_OFFSET);
-
-		// System.out.println(sdf.format(cal.getTime()));
-
-		return sdf.format(cal.getTime());
-
-	}
-
-	public static Date getDate(String date) {
-		SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_NOW);
-		try {
-			return sdf.parse(date);
-		} catch (ParseException e) {
-			logger.warn("parsing the date {} ", date);
-			return null;
-		}
-	}
-
-}
-
 public class TwitterDownload extends StatusAdapter {
 	private TwitterStream twitter;
 	private File dumpDir = null;
@@ -314,6 +272,48 @@ public class TwitterDownload extends StatusAdapter {
 		// sample() method internally creates a thread which manipulates
 		// TwitterStream and calls these adequate listener methods continuously.
 		twitter.sample();
+
+	}
+
+	public static class DateUtils {
+
+		private static final Logger logger = LoggerFactory
+				.getLogger(DateUtils.class);
+		/*
+		 * System.out.println(DateUtils.now("dd MMMMM yyyy"));
+		 * System.out.println(DateUtils.now("yyyyMMdd hh:mm"));
+		 * System.out.println(DateUtils.now("dd.MM.yy"));
+		 * System.out.println(DateUtils.now("MM/dd/yy"));
+		 */
+		public static final String DATE_FORMAT_NOW = "yyyyMMdd";
+
+		// public Writer writer ;
+		// public static String currentDate = "";
+
+		public static String now() {
+
+			Calendar cal = Calendar.getInstance();
+
+			SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_NOW);
+			sdf.setTimeZone(java.util.TimeZone.getTimeZone("GMT"));
+
+			// System.out.println(cal.ZONE_OFFSET);
+
+			// System.out.println(sdf.format(cal.getTime()));
+
+			return sdf.format(cal.getTime());
+
+		}
+
+		public static Date getDate(String date) {
+			SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_NOW);
+			try {
+				return sdf.parse(date);
+			} catch (ParseException e) {
+				logger.warn("parsing the date {} ", date);
+				return null;
+			}
+		}
 
 	}
 }
