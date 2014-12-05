@@ -179,11 +179,12 @@ public class SplitFileInTimeBucketsCLI extends AbstractCommandLineInterface {
 							logger.info("skipping tweet, before time {} < {}",
 									currentTweetTime, bucketStartTime);
 
-						logger.info("skipping 999999 records");
+						logger.info("skipping 999999 records...");
 						for (int i = 0; i < 99999; i++) {
 							br.readLine();
 							count++;
 						}
+						logger.info("...done");
 					}
 				}
 
