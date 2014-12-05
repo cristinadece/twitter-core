@@ -140,6 +140,15 @@ public class SplitFileInTimeBucketsCLI extends AbstractCommandLineInterface {
 				}
 				JsonTweet tweet = JsonTweet.parseTweetFromJson(line);
 				long currentTweetTime = tweet.getDateInMilliseconds();
+				long delta = System.currentTimeMillis() - currentTweetTime;
+				if (delta > 0 && delta < 60000 * 3) {
+					try {
+						Thread.sleep(60000); // wait a minute
+					} catch (InterruptedException e) {
+
+					}
+
+				}
 
 				if ((currentTweetTime >= endBucket)) {
 					logger.info("close bucket {}.json", bucketStartTime);
@@ -165,9 +174,14 @@ public class SplitFileInTimeBucketsCLI extends AbstractCommandLineInterface {
 					}
 				} else {
 					if (currentTweetTime < bucketStartTime) {
+
 						if (count % 100000 == 0)
 							logger.info("skipping tweet, before time {} < {}",
 									currentTweetTime, bucketStartTime);
+						for (int i = 0; i < 99999; i++) {
+							br.readLine();
+							count++;
+						}
 					}
 				}
 
