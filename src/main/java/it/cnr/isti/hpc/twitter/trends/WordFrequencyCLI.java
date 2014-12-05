@@ -318,7 +318,7 @@ public class WordFrequencyCLI extends AbstractCommandLineInterface {
 		String tweets = StringUtils.join(kw.getTweetIds(), "|");
 		String users = StringUtils.join(kw.getUserIds(), "|");
 		StringBuilder sb = new StringBuilder();
-		sb.append(kw.getName()).append("\t").append(tweets).append("\t")
+		sb.append(kw.getTrend()).append("\t").append(tweets).append("\t")
 				.append(users).append("\t").append(kw.getZscore()).append("\t")
 				.append(kw.getBasefreq());
 	
@@ -340,6 +340,7 @@ public class WordFrequencyCLI extends AbstractCommandLineInterface {
 		cli.openOutput();
 		double baseFreq;
 		double zscore;
+		String time;
 		for (Keyword kw : wordMap.values()) {
 			
 //			if (kw.getName().equals("#football")){
@@ -351,10 +352,13 @@ public class WordFrequencyCLI extends AbstractCommandLineInterface {
 			
 			baseFreq = (double) kw.getBucketFrequency().entrySet().iterator()
 					.next().getValue();
+			time = kw.getBucketFrequency().entrySet().iterator()
+					.next().getKey();
 			zscore = getZScore(kw, interval);
 			
 			kw.setBasefreq(baseFreq);
 			kw.setZscore(zscore);
+			kw.setTime(time);
 			
 			if ((Double.compare(zscore, 2.0d) >= 0) && (baseFreq > 10)) {
 				//burstyMap.put(kw.getName(), kw);
