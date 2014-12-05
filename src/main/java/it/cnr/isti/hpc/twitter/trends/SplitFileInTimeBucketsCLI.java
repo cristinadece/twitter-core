@@ -110,13 +110,14 @@ public class SplitFileInTimeBucketsCLI extends AbstractCommandLineInterface {
 				continue;
 			}
 			br = IOUtils.getPlainOrCompressedReader(f.getAbsolutePath());
-
+			logger.info("reading {}", f.getAbsolutePath());
 			// initialize current file name with time pointer
 
 			boolean done = false;
 			while (!done) {
 				String line = br.readLine();
 				long endBucket = bucketStartTime + interval;
+
 				// check if line is valid json, otherwise we may have half of
 				// tweet
 				if ((line == null) || (!isJSONValid(line))) {
@@ -139,22 +140,31 @@ public class SplitFileInTimeBucketsCLI extends AbstractCommandLineInterface {
 				long currentTweetTime = tweet.getDateInMilliseconds();
 
 				if ((currentTweetTime >= endBucket)) {
+					logger.info("close bucket {}.json", bucketStartTime);
 					out.close();
 					bucketStartTime = System.currentTimeMillis();
 
 					outputFile = new File(cli.getOutput(), bucketStartTime
 							+ ".json.gz");
+					logger.info("open bucket {}.json", bucketStartTime);
 					out = IOUtils.getPlainOrCompressedUTF8Writer(outputFile
 							.getAbsolutePath());
 					endBucket = bucketStartTime + interval;
+					logger.info("delefe old {}.json", bucketStartTime);
 					deleteOlderFiles(cli);
 				}
 
 				if ((currentTweetTime > bucketStartTime)
 						&& (currentTweetTime < endBucket)) {
+
 					if (tweet.isItalian()) {
 						out.write(line);
 						out.write("\n");
+					}
+				} else {
+					if (currentTweetTime < bucketStartTime) {
+						logger.info("skipping tweet, before time {} < {}",
+								currentTweetTime, bucketStartTime);
 					}
 				}
 
