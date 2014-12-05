@@ -175,9 +175,8 @@ public class SplitFileInTimeBucketsCLI extends AbstractCommandLineInterface {
 				} else {
 					if (currentTweetTime < bucketStartTime) {
 
-						if (count % 100000 == 0)
-							logger.info("skipping tweet, before time {} < {}",
-									currentTweetTime, bucketStartTime);
+						logger.info("skipping tweet, before time {} < {}",
+								currentTweetTime, bucketStartTime);
 
 						logger.info("skipping 999999 records...");
 						for (int i = 0; i < 99999; i++) {
