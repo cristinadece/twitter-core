@@ -93,7 +93,7 @@ public class SplitFileInTimeBucketsCLI extends AbstractCommandLineInterface {
 				+ ".json.gz");
 		BufferedWriter out = IOUtils.getPlainOrCompressedUTF8Writer(outputFile
 				.getAbsolutePath());
-
+		int count = 0;
 		while (true) {
 
 			File f = new File(dirname, "gardenhose-full-dump-"
@@ -114,8 +114,10 @@ public class SplitFileInTimeBucketsCLI extends AbstractCommandLineInterface {
 			// initialize current file name with time pointer
 
 			boolean done = false;
+
 			while (!done) {
 				String line = br.readLine();
+				count++;
 				long endBucket = bucketStartTime + interval;
 
 				// check if line is valid json, otherwise we may have half of
@@ -163,8 +165,9 @@ public class SplitFileInTimeBucketsCLI extends AbstractCommandLineInterface {
 					}
 				} else {
 					if (currentTweetTime < bucketStartTime) {
-						logger.info("skipping tweet, before time {} < {}",
-								currentTweetTime, bucketStartTime);
+						if (count % 100000 == 0)
+							logger.info("skipping tweet, before time {} < {}",
+									currentTweetTime, bucketStartTime);
 					}
 				}
 
