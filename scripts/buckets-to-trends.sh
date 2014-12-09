@@ -3,7 +3,7 @@
 
 
 source scripts/config.sh
-EXPECTED_ARGS=3
+EXPECTED_ARGS=2
 E_BADARGS=65
 
 BUCKET_SIZE_IN_MINUTES=30
