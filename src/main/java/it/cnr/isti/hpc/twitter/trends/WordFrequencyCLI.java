@@ -451,7 +451,7 @@ public class WordFrequencyCLI extends AbstractCommandLineInterface {
 			
 		}
 		else {
-			previousFiles = Arrays.copyOfRange(files, 2, files.length);
+			previousFiles = Arrays.copyOfRange(files, 2, files.length -1);
 			
 		}
 		for (File f : previousFiles) {
