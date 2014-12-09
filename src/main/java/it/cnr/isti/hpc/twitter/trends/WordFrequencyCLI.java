@@ -8,6 +8,7 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -20,6 +21,8 @@ import org.slf4j.LoggerFactory;
 import it.cnr.isti.hpc.cli.AbstractCommandLineInterface;
 import it.cnr.isti.hpc.io.IOUtils;
 import it.cnr.isti.hpc.twitter.domain.JsonTweet;
+import it.cnr.isti.hpc.twitter.trends.output.Classified;
+import it.cnr.isti.hpc.twitter.trends.output.EventTag;
 import it.cnr.isti.hpc.twitter.trends.output.Trend;
 import it.cnr.isti.hpc.twitter.util.InvalidTweetException;
 import it.cnr.isti.hpc.twitter.util.Twokenize;
@@ -338,6 +341,28 @@ public class WordFrequencyCLI extends AbstractCommandLineInterface {
 	public Trend keywords2TrendTransform(Keyword kw){
 		
 		Trend trend = new Trend();
+		
+		trend.setAtTime(new Date(System.currentTimeMillis()));
+		
+		// added list of list of tweets
+		// TODO this here might be a problem
+		List<List<JsonObject>> tweets = trend.getEventResource(); 
+		tweets.add(kw.getTweetsJ());
+		trend.setEventResource(tweets);
+		
+		trend.setDescription(kw.getTrend());
+		
+		Classified cl = new Classified();
+		List<Classified> clList = new ArrayList<Classified>();
+		clList.add(cl);
+		trend.setClassified(clList);
+		
+		EventTag et = new EventTag();
+		et.setName(kw.getTrend());
+		et.setTagCount(String.valueOf(kw.getBasefreq()));
+		List<EventTag> etList = new ArrayList<EventTag>();
+		etList.add(et);
+		trend.setEventTag(etList);
 		
 		return trend;	
 	}
