@@ -397,10 +397,11 @@ public class WordFrequencyCLI extends AbstractCommandLineInterface {
 			kw.setZscore(zscore);
 			kw.setTime(time);
 			
-			if ((Double.compare(zscore, 2.0d) >= 0) && (baseFreq > 10)) {
+			if ((Double.compare(zscore, 2.5d) >= 0) && (baseFreq > 10)) {
 				//burstyMap.put(kw.getName(), kw);
 				//cli.writeLineInOutput(plainTrendFormatting(kw));
-				cli.writeLineInOutput(gson.toJson(kw));
+				//cli.writeLineInOutput(gson.toJson(kw));
+				cli.writeLineInOutput(gson.toJson(keywords2TrendTransform(kw)));
 				
 			
 			}

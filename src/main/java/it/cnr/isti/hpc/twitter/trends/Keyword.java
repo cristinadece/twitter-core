@@ -32,7 +32,7 @@ public class Keyword {
 	}
 	
 	public void addTweetsJ(JsonObject tweet){
-		if (this.tweetsJ.size()<=12){
+		if (this.tweetsJ.size()<=11){
 			if (!this.tweetsJ.contains(tweet)){
 				this.tweetsJ.add(tweet);
 			}
