@@ -435,17 +435,16 @@ public class WordFrequencyCLI extends AbstractCommandLineInterface {
 		// 2. establish the length of the vector 7-10 buckets?
 		int vectorLen = 7;
 
-		// 3. we start with the last bucket and initialize the dictionary
-		// wordMap
-		// we use to count it on the one before last for safety (?!)
-		File currentFile = files[0];
+		// 3. we start with the one before last bucket and initialize the dictionary
+		// wordMap; we use to count it on the one before last for safety (?!)
+		File currentFile = files[1]; 
 		logger.info("Processing file : {}", currentFile.getAbsolutePath());
 		cli.countOccurences(currentFile.getAbsolutePath(), true);
 
 		// 4. we search for those keywords TODO (uni,bi,trigrams) in the
 		// previous buckets (should we keep different maps?)
 
-		File[] previousFiles = Arrays.copyOfRange(files, 1, vectorLen + 1);
+		File[] previousFiles = Arrays.copyOfRange(files, 2, vectorLen + 1);
 		for (File f : previousFiles) {
 			try {
 				logger.info("Processing file : {}", f.getAbsolutePath());
