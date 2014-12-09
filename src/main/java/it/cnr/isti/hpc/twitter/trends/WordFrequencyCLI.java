@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import it.cnr.isti.hpc.cli.AbstractCommandLineInterface;
 import it.cnr.isti.hpc.io.IOUtils;
 import it.cnr.isti.hpc.twitter.domain.JsonTweet;
+import it.cnr.isti.hpc.twitter.trends.output.Trend;
 import it.cnr.isti.hpc.twitter.util.InvalidTweetException;
 import it.cnr.isti.hpc.twitter.util.Twokenize;
 
@@ -32,6 +33,8 @@ import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.util.Version;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 /**
  * This script is run for all files in a directory - a for in shell 
@@ -238,13 +241,15 @@ public class WordFrequencyCLI extends AbstractCommandLineInterface {
 		String row;
 		JsonTweet tweet;
 		Keyword kw;
+		JsonObject j = null;
 		
 		String timestamp = getTimeinMilisFromFilename(f);
 		
 		while ((row = bfr.readLine()) != null) {
 			tweet = JsonTweet.parseTweetFromJson(row);
 			List<String> tweetWords = cleanTweetText(tweet.getText());
-
+			j = gson.fromJson (row, JsonElement.class).getAsJsonObject();
+					
 			for (String word : tweetWords) {
 				if (wordMap.containsKey(word)) {
 					kw = wordMap.get(word);
@@ -252,12 +257,12 @@ public class WordFrequencyCLI extends AbstractCommandLineInterface {
 					kw.addUserId(tweet.getUsers().getId());
 					kw.addTweetId(tweet.getId());
 					if (isFirstFile){
-						kw.addFirst50tweets(row);
+						kw.addTweetsJ(j);
 					}
 				} else {
 					if (isFirstFile) {
 						kw = new Keyword(word, timestamp, tweet.getId(), tweet.getUsers()
-								.getId(), row);
+								.getId(), j);
 						wordMap.put(word, kw);
 					} else {
 						// we do nothing here as there are words that are in
@@ -267,6 +272,7 @@ public class WordFrequencyCLI extends AbstractCommandLineInterface {
 					}
 				}
 			}
+		j = null;
 
 		}
 		bfr.close();
@@ -325,10 +331,16 @@ public class WordFrequencyCLI extends AbstractCommandLineInterface {
 		return sb.toString();
 	}
 	
-	public String jsonTrendFormatting(Keyword kw){
+	public String jsonTrendFormatting2String(Keyword kw){
 		return gson.toJson(kw);
 	}
 
+	public Trend keywords2TrendTransform(Keyword kw){
+		
+		Trend trend = new Trend();
+		
+		return trend;	
+	}
 	
 	// there are words with high frequency but because they are repeated ina tweet
 	// #bassil that may influence the statistics

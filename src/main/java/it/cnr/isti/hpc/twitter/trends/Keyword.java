@@ -9,6 +9,8 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import com.google.gson.JsonObject;
+
 public class Keyword {
 
 	private String trend;
@@ -18,7 +20,24 @@ public class Keyword {
 	private transient LinkedHashMap<String, Integer> bucketFrequency;
 	private List<String> ids;
 	private List<String> users;
-	private List<String> tweets;
+	//private List<String> tweets;
+	private List<JsonObject> tweetsJ;
+	
+	public List<JsonObject> getTweetsJ() {
+		return tweetsJ;
+	}
+
+	public void setTweetsJ(List<JsonObject> tweetsJ) {
+		this.tweetsJ = tweetsJ;
+	}
+	
+	public void addTweetsJ(JsonObject tweet){
+		if (this.tweetsJ.size()<=12){
+			if (!this.tweetsJ.contains(tweet)){
+				this.tweetsJ.add(tweet);
+			}
+		}
+	}
 	private List<String> entities;
 	private double zscore;
 	private double frequency;
@@ -46,21 +65,21 @@ public class Keyword {
 		}
 	}
 	
-	public List<String> getFirst50tweets() {
-		return tweets;
-	}
-
-	public void setFirst50tweets(List<String> first50tweets) {
-		this.tweets = first50tweets;
-	}
-	
-	public void addFirst50tweets(String tweet){
-		if (this.tweets.size()<=50){
-			if (!this.tweets.contains(tweet)){
-				this.tweets.add(tweet);
-			}
-		}
-	}
+//	public List<String> getFirst50tweets() {
+//		return tweets;
+//	}
+//
+//	public void setFirst50tweets(List<String> first50tweets) {
+//		this.tweets = first50tweets;
+//	}
+//	
+//	public void addFirst50tweets(String tweet){
+//		if (this.tweets.size()<=12){
+//			if (!this.tweets.contains(tweet)){
+//				this.tweets.add(tweet);
+//			}
+//		}
+//	}
 
 
 	public double getZscore() {
@@ -138,7 +157,8 @@ public class Keyword {
 		bucketFrequency = new LinkedHashMap<String, Integer>();
 		ids = new ArrayList<String>();
 		users = new ArrayList<String>();
-		tweets = new ArrayList<String>();
+		//tweets = new ArrayList<String>();
+		tweetsJ = new ArrayList<JsonObject>();
 	}
 	
 	public Keyword(String word) {
@@ -147,22 +167,40 @@ public class Keyword {
 		bucketFrequency = new LinkedHashMap<String, Integer>();
 		ids = new ArrayList<String>();
 		users = new ArrayList<String>();
-		tweets = new ArrayList<String>();
+		//tweets = new ArrayList<String>();
+		tweetsJ = new ArrayList<JsonObject>();
 	}
 	
-	public Keyword(String word, String interval, String tweetId, String userID, String tweet) {
+//	public Keyword(String word, String interval, String tweetId, String userID, String tweet) {
+//		
+//		//init
+//		bucketFrequency = new LinkedHashMap<String, Integer>();
+//		ids = new ArrayList<String>();
+//		users = new ArrayList<String>();
+//		//tweets = new ArrayList<String>();
+//		tweetsJ = new ArrayList<JsonObject>();
+//		
+//		trend = word;
+//		bucketFrequency.put(interval, 1);
+//		ids.add(tweetId);
+//		users.add(userID);
+//		tweets.add(tweet);
+//	}
+	
+	public Keyword(String word, String interval, String tweetId, String userID, JsonObject tweet) {
 		
 		//init
 		bucketFrequency = new LinkedHashMap<String, Integer>();
 		ids = new ArrayList<String>();
 		users = new ArrayList<String>();
-		tweets = new ArrayList<String>();
+		//tweets = new ArrayList<String>();
+		tweetsJ = new ArrayList<JsonObject>();
 		
 		trend = word;
 		bucketFrequency.put(interval, 1);
 		ids.add(tweetId);
 		users.add(userID);
-		tweets.add(tweet);
+		tweetsJ.add(tweet);
 	}
 
 	public static void main(String[] args) {
