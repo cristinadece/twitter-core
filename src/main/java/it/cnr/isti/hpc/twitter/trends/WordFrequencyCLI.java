@@ -443,18 +443,34 @@ public class WordFrequencyCLI extends AbstractCommandLineInterface {
 
 		// 4. we search for those keywords TODO (uni,bi,trigrams) in the
 		// previous buckets (should we keep different maps?)
-
-		File[] previousFiles = Arrays.copyOfRange(files, 2, vectorLen + 1);
-		for (File f : previousFiles) {
-			try {
-				logger.info("Processing file : {}", f.getAbsolutePath());
-				cli.countOccurences(f.getAbsolutePath(), false);
-			} catch (IOException e) {
-				logger.error(
-						"There is a problem with processing the current trends file - seed {}",
-						currentFile.getName());
+		
+		if (files.length >= vectorLen + 2){
+			File[] previousFiles = Arrays.copyOfRange(files, 2, vectorLen + 1);
+			for (File f : previousFiles) {
+				try {
+					logger.info("Processing file : {}", f.getAbsolutePath());
+					cli.countOccurences(f.getAbsolutePath(), false);
+				} catch (IOException e) {
+					logger.error(
+							"There is a problem with processing the current trends file - seed {}",
+							currentFile.getName());
+				}
+			}	
+		}
+		else {
+			File[] previousFiles = Arrays.copyOfRange(files, 2, files.length-2);
+			for (File f : previousFiles) {
+				try {
+					logger.info("Processing file : {}", f.getAbsolutePath());
+					cli.countOccurences(f.getAbsolutePath(), false);
+				} catch (IOException e) {
+					logger.error(
+							"There is a problem with processing the current trends file - seed {}",
+							currentFile.getName());
+				}
 			}
 		}
+		
 
 		// 5. check if they are bursty and put them in bursty map - after some
 		// filters (configurable)  
