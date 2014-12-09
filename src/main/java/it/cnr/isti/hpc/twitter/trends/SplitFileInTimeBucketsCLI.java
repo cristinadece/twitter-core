@@ -94,6 +94,7 @@ public class SplitFileInTimeBucketsCLI extends AbstractCommandLineInterface {
 		BufferedWriter out = IOUtils.getPlainOrCompressedUTF8Writer(outputFile
 				.getAbsolutePath());
 		int count = 0;
+		boolean far = true;
 		while (true) {
 
 			File f = new File(dirname, "gardenhose-full-dump-"
@@ -142,6 +143,7 @@ public class SplitFileInTimeBucketsCLI extends AbstractCommandLineInterface {
 				long currentTweetTime = tweet.getDateInMilliseconds();
 				long delta = System.currentTimeMillis() - currentTweetTime;
 				if (delta > 0 && delta < 60000 * 3) {
+					logger.info("troppo vicino alla fine.. sto bono vai");
 					try {
 						Thread.sleep(60000); // wait a minute
 					} catch (InterruptedException e) {
@@ -167,7 +169,7 @@ public class SplitFileInTimeBucketsCLI extends AbstractCommandLineInterface {
 
 				if ((currentTweetTime > bucketStartTime)
 						&& (currentTweetTime < endBucket)) {
-
+					far = false;
 					if (tweet.isItalian()) {
 						out.write(line);
 						out.write("\n");
@@ -179,9 +181,11 @@ public class SplitFileInTimeBucketsCLI extends AbstractCommandLineInterface {
 								currentTweetTime, bucketStartTime);
 
 						logger.info("skipping 999999 records...");
-						for (int i = 0; i < 99999; i++) {
-							br.readLine();
-							count++;
+						if (far) {
+							for (int i = 0; i < 99999; i++) {
+								br.readLine();
+								count++;
+							}
 						}
 						logger.info("...done");
 					}
