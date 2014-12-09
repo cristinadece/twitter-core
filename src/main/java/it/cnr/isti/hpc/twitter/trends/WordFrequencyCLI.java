@@ -406,7 +406,7 @@ public class WordFrequencyCLI extends AbstractCommandLineInterface {
 			}
 		}
 		
-		cli.closeInputAndOuput();
+		cli.closeOutput();
 
 	}
 
