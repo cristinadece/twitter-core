@@ -405,6 +405,8 @@ public class WordFrequencyCLI extends AbstractCommandLineInterface {
 			
 			}
 		}
+		
+		cli.closeInputAndOuput();
 
 	}
 
@@ -458,7 +460,7 @@ public class WordFrequencyCLI extends AbstractCommandLineInterface {
 			}	
 		}
 		else {
-			File[] previousFiles = Arrays.copyOfRange(files, 2, files.length-2);
+			File[] previousFiles = Arrays.copyOfRange(files, 2, files.length + 1);
 			for (File f : previousFiles) {
 				try {
 					logger.info("Processing file : {}", f.getAbsolutePath());
