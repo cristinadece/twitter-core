@@ -10,6 +10,7 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
+import java.util.Date;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -176,9 +177,10 @@ public class SplitFileInTimeBucketsCLI extends AbstractCommandLineInterface {
 					}
 				} else {
 					if (currentTweetTime < bucketStartTime) {
-
-						logger.info("skipping tweet, before time {} < {}",
-								currentTweetTime, bucketStartTime);
+						Date d = new Date(currentTweetTime);
+						Date d1 = new Date(bucketStartTime);
+						logger.info("skipping tweet, before time {} < {}", d,
+								d1);
 
 						logger.info("skipping 999999 records...");
 						if (far) {
