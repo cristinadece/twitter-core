@@ -42,7 +42,7 @@ public class Trend {
 		String tweets = "";
 		List<JsonObject> listOfTweets = eventResource.get(0);
 		for (JsonObject t : listOfTweets){
-			tweets.concat(t + " ");
+			tweets = tweets.concat(t.get("text") + " ");
 		}
 		return tweets.trim();
 	}
