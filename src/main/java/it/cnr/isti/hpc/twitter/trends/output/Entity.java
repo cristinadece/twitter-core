@@ -16,41 +16,6 @@ public class Entity {
 	private Date createDate;
 	private Date lastUpdate;
 	private List<EntityTag> entityTag;
-	
-	class EntityTag{
-		private int id;
-		private String name;
-		private Date createDate;
-		private Date lastUpdate;
-		
-		public int getId() {
-			return id;
-		}
-		public void setId(int id) {
-			this.id = id;
-		}
-		public String getName() {
-			return name;
-		}
-		public void setName(String name) {
-			this.name = name;
-		}
-		public Date getCreateDate() {
-			return createDate;
-		}
-		public void setCreateDate(Date createDate) {
-			this.createDate = createDate;
-		}
-		public Date getLastUpdate() {
-			return lastUpdate;
-		}
-		public void setLastUpdate(Date lastUpdate) {
-			this.lastUpdate = lastUpdate;
-		}
-		
-		
-		
-	}
 
 	/**
 	 * 

@@ -69,26 +69,6 @@ public class WordFrequencyCLI extends AbstractCommandLineInterface {
 		super(args, params, USAGE);
 	}
 
-	private final List<String> stopItalian = Arrays.asList(new String[] {
-			"adesso", "ai", "al", "alla", "allo", "allora", "altre", "altri",
-			"altro", "anche", "ancora", "avere", "aveva", "avevano", "ben",
-			"buono", "che", "chi", "cinque", "comprare", "con", "consecutivi",
-			"consecutivo", "cosa", "cui", "da", "del", "della", "dello",
-			"dentro", "deve", "devo", "di", "doppio", "due", "e", "ecco",
-			"fare", "fine", "fino", "fra", "gente", "giu", "ha", "hai",
-			"hanno", "ho", "il", "indietro", "invece", "io", "la", "lavoro",
-			"le", "lei", "lo", "loro", "lui", "lungo", "ma", "me", "meglio",
-			"molta", "molti", "molto", "nei", "nella", "no", "noi", "nome",
-			"nostro", "nove", "nuovi", "nuovo", "o", "oltre", "ora", "otto",
-			"peggio", "pero", "persone", "piu", "poco", "primo", "promesso",
-			"qua", "quarto", "quasi", "quattro", "quello", "questo", "qui",
-			"quindi", "quinto", "rispetto", "sara", "secondo", "sei", "sembra",
-			"sembrava", "senza", "sette", "sia", "siamo", "siete", "solo",
-			"sono", "sopra", "soprattutto", "sotto", "stati", "stato",
-			"stesso", "su", "subito", "sul", "sulla", "tanto", "te", "tempo",
-			"terzo", "tra", "tre", "triplo", "ultimo", "un", "una", "uno",
-			"va", "vai", "voi", "volte", "vostro" });
-
 	private HashMap<String, Keyword> wordMap;
 
 	//private HashMap<String, Keyword> burstyMap;
@@ -104,131 +84,6 @@ public class WordFrequencyCLI extends AbstractCommandLineInterface {
 		//burstyMap = new HashMap<String, Keyword>();
 	}
 
-	public List<String> cleanTweetText(String tweetText) {
-
-		// the replace all is to remove puntuation (breaks URLs)
-		// List<String> words = new Text(tweetText.replaceAll("\\p{P}",
-		// "").toLowerCase()).getTerms();
-		// List<String> words = new
-		// Text(tweetText.replaceAll("([a-z]+)[?:!.,;]*",
-		// "$1").toLowerCase()).getTerms();
-
-		// List<String> words = Twokenize.tokenize(tweetText);
-		List<String> words = new ArrayList<String>();
-		words = Twokenize.tokenizeRawTweetText(tweetText);
-		List<String> cleanwords = new ArrayList<String>();
-		
-
-		if (words.size() > 0) {
-			for (String s : words) {
-				if (stopItalian.contains(s)) {
-					continue;
-				} else if (s.length() < 2) {
-					continue;
-				} else if (s.startsWith("@")) {
-					continue;
-				}
-				cleanwords.add(s.toLowerCase());
-			}
-		}
-		return cleanwords;
-	}
-	
-	public List<String> cleanTweetTextNGrams(String tweetText) {
-
-		List<String> words = new ArrayList<String>();
-		// unigrams
-		words = Twokenize.tokenizeRawTweetText(tweetText);
-	
-		// bigrams
-		Reader reader = new StringReader(tweetText);
-		TokenStream tokenizer = new StandardTokenizer(Version.LUCENE_CURRENT, reader);
-		tokenizer = new ShingleFilter(tokenizer, 2, 3);
-		CharTermAttribute charTermAttribute = tokenizer.addAttribute(CharTermAttribute.class);
-
-		try {
-			while (tokenizer.incrementToken()) {
-			    String token = charTermAttribute.toString();
-			    if (StringUtils.split(token, " ").length > 1){
-			    	words.add(token); // there will be unfiltered TODO
-			    }
-			}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		
-		
-		List<String> cleanwords = new ArrayList<String>();
-			if (words.size() > 0) {
-			for (String s : words) {
-				if (stopItalian.contains(s)) {
-					continue;
-				} else if (s.length() < 2) {
-					continue;
-				} else if (s.startsWith("@")) {
-					continue;
-				}
-				cleanwords.add(s.toLowerCase());
-			}
-		}
-			
-		for (String s : words) {
-			System.out.println(s);
-		}
-			
-		return cleanwords;
-	}
-	
-	public List<String> cleanTweetTextNGramsDummy(String tweetText) {
-
-		List<String> words = new ArrayList<String>();
-		// unigrams
-		words = Twokenize.tokenizeRawTweetText(tweetText);
-		
-		List<String> ngrams = new ArrayList<String>();
-		
-		//bigrams
-		for(int x = 0; x < words.size()-1; x ++) {
-			String s = words.get(x).concat(" ").concat(words.get(x+1));
-			ngrams.add(s);
-		}
-		//trigrams
-		for(int x = 0; x < words.size()-2; x ++) {
-			String s = words.get(x).concat(" ").concat(words.get(x+1)).concat(" ").concat(words.get(x+2));
-			ngrams.add(s);
-		}
-		words.addAll(ngrams);
-		
-		List<String> cleanwords = new ArrayList<String>();
-			if (words.size() > 0) {
-			for (String s : words) {
-				if (stopItalian.contains(s)) {
-					continue;
-				} else if (s.length() < 2) {
-					continue;
-				} else if (s.startsWith("@")) {
-					continue;
-				} else if (s.contains("http://")){
-					continue;
-				}
-				cleanwords.add(s.toLowerCase());
-			}
-		}
-			
-//		for (String s : words) {
-//			System.out.println(s);
-//		}
-//		
-//		System.out.println("================");
-//		
-//		for (String s : cleanwords) {
-//			System.out.println(s);
-//		}
-//			
-		return cleanwords;
-	}
 
 	public String getTimeinMilisFromFilename(String filename) {
 		String[] elems = StringUtils.split(filename, "/");
@@ -250,7 +105,7 @@ public class WordFrequencyCLI extends AbstractCommandLineInterface {
 		
 		while ((row = bfr.readLine()) != null) {
 			tweet = JsonTweet.parseTweetFromJson(row);
-			List<String> tweetWords = cleanTweetText(tweet.getText());
+			List<String> tweetWords = CleanAndTokenizeTweet.cleanTweetTextRawTokenizer(tweet.getText());
 			j = gson.fromJson (row, JsonElement.class).getAsJsonObject();
 					
 			for (String word : tweetWords) {
@@ -288,17 +143,9 @@ public class WordFrequencyCLI extends AbstractCommandLineInterface {
 		double baseFreq = (double) iterate.next().getValue();
 		List<Double> frequencies = new ArrayList<Double>();
 		double score;
-//		SummaryStatistics stats = new SummaryStatistics();
-//		while (iterate.hasNext()) {
-//			stats.addValue(iterate.next().getValue());
-//		}
-//
-//		double mean = stats.getMean();
-//		double variance = stats.getVariance();
 		
 		// we do it like this because we need to divide by interval 
 		// in case there aren't values for each day
-		
 		while (iterate.hasNext()) {
 			frequencies.add((double)iterate.next().getValue());
 		}
@@ -334,9 +181,6 @@ public class WordFrequencyCLI extends AbstractCommandLineInterface {
 		return sb.toString();
 	}
 	
-	public String jsonTrendFormatting2String(Keyword kw){
-		return gson.toJson(kw);
-	}
 
 	public Trend keywords2TrendTransform(Keyword kw){
 		

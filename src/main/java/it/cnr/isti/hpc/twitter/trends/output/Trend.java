@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.google.gson.JsonObject;
 
 public class Trend {
@@ -36,6 +38,14 @@ public class Trend {
 	private List<Classified> classified;
 	
 	
+	public String concatTweets(){
+		String tweets = "";
+		List<JsonObject> listOfTweets = eventResource.get(0);
+		for (JsonObject t : listOfTweets){
+			tweets.concat(t + " ");
+		}
+		return tweets.trim();
+	}
 	
 	public String getId() {
 		return id;
