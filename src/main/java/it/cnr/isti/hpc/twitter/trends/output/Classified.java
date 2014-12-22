@@ -51,7 +51,7 @@ public class Classified {
 	 */
 	public Classified() {
 		// TODO Auto-generated constructor stub
-		name = "trend-detection";
+		name = "trend detection";
 		uri = "http://secure.eng.it/ontologySecure/microEvents.owl#Trend_Detection";
 	}
 
