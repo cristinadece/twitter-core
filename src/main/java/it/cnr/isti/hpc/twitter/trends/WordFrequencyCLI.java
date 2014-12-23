@@ -190,8 +190,8 @@ public class WordFrequencyCLI extends AbstractCommandLineInterface {
 		
 		// added list of list of tweets
 		// TODO this here might be a problem
-		List<List<JsonObject>> tweets = trend.getEventResource(); 
-		tweets.add(kw.getTweetsJ());
+		HashMap<String,List<JsonObject>> tweets = trend.getEventResource(); 
+		tweets.put("Tweets", kw.getTweetsJ());
 		trend.setEventResource(tweets);
 		
 		trend.setDescription(kw.getTrend());

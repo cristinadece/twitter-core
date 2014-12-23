@@ -6,6 +6,7 @@ package it.cnr.isti.hpc.twitter.trends.output;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -30,7 +31,7 @@ public class Trend {
 	private String severity;
 	private Boolean credibility = true;
 	private List<String> related;
-	private List<List<JsonObject>> eventResource; 
+	private HashMap<String,List<JsonObject>> eventResource; 
 	// a list of resources, represented by tweets 
 	// (containing a list of tweets)
 	private List<Entity> entities;
@@ -40,7 +41,7 @@ public class Trend {
 	
 	public String concatTweets(){
 		String tweets = "";
-		List<JsonObject> listOfTweets = eventResource.get(0);
+		List<JsonObject> listOfTweets = eventResource.get("Tweets");
 		for (JsonObject t : listOfTweets){
 			tweets = tweets.concat(t.get("text") + " ");
 		}
@@ -239,13 +240,13 @@ public class Trend {
 
 
 
-	public List<List<JsonObject>> getEventResource() {
+	public HashMap<String,List<JsonObject>> getEventResource() {
 		return eventResource;
 	}
 
 
 
-	public void setEventResource(List<List<JsonObject>> eventResource) {
+	public void setEventResource(HashMap<String,List<JsonObject>> eventResource) {
 		this.eventResource = eventResource;
 	}
 
@@ -291,7 +292,7 @@ public class Trend {
 		// TODO Auto-generated constructor stub
 		credibility = true;
 		related = new ArrayList<String>();
-		eventResource = new ArrayList<List<JsonObject>>();
+		eventResource = new HashMap<String,List<JsonObject>>();
 		entities = new ArrayList<Entity>();
 		eventTag = new ArrayList<EventTag>();
 		classified = new ArrayList<Classified>();
