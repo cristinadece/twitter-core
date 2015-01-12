@@ -31,7 +31,7 @@ public class Trend {
 	private String severity;
 	private Boolean credibility = true;
 	private List<String> related;
-	private HashMap<String,List<JsonObject>> eventResource; 
+	private List<HashMap<String,List<JsonObject>>> eventResource; 
 	// a list of resources, represented by tweets 
 	// (containing a list of tweets)
 	private List<Entity> entities;
@@ -41,7 +41,7 @@ public class Trend {
 	
 	public String concatTweets(){
 		String tweets = "";
-		List<JsonObject> listOfTweets = eventResource.get("Tweets");
+		List<JsonObject> listOfTweets = eventResource.get(0).get("Tweets");
 		for (JsonObject t : listOfTweets){
 			tweets = tweets.concat(t.get("text") + " ");
 		}
@@ -240,13 +240,13 @@ public class Trend {
 
 
 
-	public HashMap<String,List<JsonObject>> getEventResource() {
+	public List<HashMap<String,List<JsonObject>>> getEventResource() {
 		return eventResource;
 	}
 
 
 
-	public void setEventResource(HashMap<String,List<JsonObject>> eventResource) {
+	public void setEventResource(List<HashMap<String,List<JsonObject>>> eventResource) {
 		this.eventResource = eventResource;
 	}
 
@@ -292,7 +292,9 @@ public class Trend {
 		// TODO Auto-generated constructor stub
 		credibility = true;
 		related = new ArrayList<String>();
-		eventResource = new HashMap<String,List<JsonObject>>();
+		HashMap<String,List<JsonObject>> eventResourceMap = new HashMap<String,List<JsonObject>>();
+		
+		eventResource = new ArrayList<HashMap<String,List<JsonObject>>>();
 		entities = new ArrayList<Entity>();
 		eventTag = new ArrayList<EventTag>();
 		classified = new ArrayList<Classified>();

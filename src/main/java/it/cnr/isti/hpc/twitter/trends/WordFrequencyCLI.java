@@ -38,6 +38,10 @@ import org.apache.lucene.util.Version;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.WebResource;
+import com.sun.jersey.api.representation.Form;
 
 /**
  * This script is run for all files in a directory - a for in shell 
@@ -190,9 +194,11 @@ public class WordFrequencyCLI extends AbstractCommandLineInterface {
 		
 		// added list of list of tweets
 		// TODO this here might be a problem
-		HashMap<String,List<JsonObject>> tweets = trend.getEventResource(); 
+		List<HashMap<String,List<JsonObject>>> resources = trend.getEventResource(); 
+		HashMap<String,List<JsonObject>> tweets = new HashMap<String,List<JsonObject>>();
 		tweets.put("Tweets", kw.getTweetsJ());
-		trend.setEventResource(tweets);
+		resources.add(tweets);
+		trend.setEventResource(resources);
 		
 		trend.setDescription(kw.getTrend());
 		
@@ -211,6 +217,39 @@ public class WordFrequencyCLI extends AbstractCommandLineInterface {
 		return trend;	
 	}
 	
+	
+	public String sendTrends(Trend trend){
+		try {
+			Client client = Client.create();
+			WebResource webResource = client.resource("http://office.resiltech.com:8084/eventService/webresources/TEP");
+
+			Form form = new Form();
+
+			form.add("type", "text/json"); //“trend-detection”
+			form.add("resource-block", gson.toJson(trend));
+
+			// POST method
+			ClientResponse response = webResource.type("application/json")
+					.post(ClientResponse.class, form);
+
+			// check response status code
+			if (response.getStatus() != 200) {
+				logger.error("error {} {}", response.getStatus(),
+						response.getMetadata());
+				throw new RuntimeException("Failed : HTTP error code : "
+						+ response.getStatus());
+			}
+
+			// display response
+			String output = response.getEntity(String.class);
+			return output;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "";
+		
+	}
+	
 	// there are words with high frequency but because they are repeated ina tweet
 	// #bassil that may influence the statistics
 							
@@ -222,6 +261,7 @@ public class WordFrequencyCLI extends AbstractCommandLineInterface {
 		double baseFreq;
 		double zscore;
 		String time;
+		
 		for (Keyword kw : wordMap.values()) {
 			
 //			if (kw.getName().equals("#football")){
