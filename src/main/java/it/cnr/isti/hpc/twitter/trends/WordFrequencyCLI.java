@@ -20,8 +20,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 
-import javax.ws.rs.core.MediaType;
-
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -217,9 +215,8 @@ public class WordFrequencyCLI extends AbstractCommandLineInterface {
 			// form.add("resource-block", gson.toJson(trend));
 
 			// POST method
-			ClientResponse response = webResource.type(
-					MediaType.APPLICATION_JSON_TYPE).post(ClientResponse.class,
-					gson.toJson(trend));
+			ClientResponse response = webResource.type("text/json").post(
+					ClientResponse.class, gson.toJson(trend));
 
 			// check response status code
 			if (response.getStatus() != 200) {
