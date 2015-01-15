@@ -4,6 +4,13 @@
 	<groupId>it.cnr.isti.hpc</groupId>
 	<artifactId>twitter</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	<properties>
+		
+		<project.source.charset>UTF-8</project.source.charset>
+		<project.source.encoding>UTF-8</project.source.encoding>
+		<java.version.source>1.6</java.version.source>
+		<java.version.target>1.6</java.version.target>
+	</properties>
 	<dependencies>
 
 		<dependency>
@@ -213,7 +220,17 @@
 					</execution>
 				</executions>
 			</plugin>
-
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<charset>${project.source.charset}</charset>
+					<encoding>${project.source.encoding}</encoding>
+					<source>${java.version.source}</source>
+					<target>${java.version.target}</target>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 
@@ -222,6 +239,7 @@
 		<jdkLevel>1.5</jdkLevel>
 		<jetty.version>6.1.18</jetty.version>
 		<http.port>8080</http.port>
+		
 	</properties>
 
 	<repositories>
