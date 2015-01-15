@@ -20,6 +20,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 
+import javax.ws.rs.core.MediaType;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +32,6 @@ import com.google.gson.JsonObject;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
-import com.sun.jersey.api.representation.Form;
 
 /**
  * This script is run for all files in a directory - a for in shell We delete
@@ -210,14 +211,15 @@ public class WordFrequencyCLI extends AbstractCommandLineInterface {
 			WebResource webResource = client
 					.resource("http://office.resiltech.com:8084/eventService/webresources/TEP");
 
-			Form form = new Form();
-
-			form.add("type", "text/json");
-			form.add("resource-block", gson.toJson(trend));
+			// Form form = new Form();
+			//
+			// form.add("type", "text/json");
+			// form.add("resource-block", gson.toJson(trend));
 
 			// POST method
-			ClientResponse response = webResource.type("application/json")
-					.post(ClientResponse.class, form);
+			ClientResponse response = webResource.type(
+					MediaType.APPLICATION_JSON_TYPE).post(ClientResponse.class,
+					gson.toJson(trend));
 
 			// check response status code
 			if (response.getStatus() != 200) {
