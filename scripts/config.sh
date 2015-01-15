@@ -12,4 +12,4 @@ HTML_LOG=/data/tweets/logs/full-dump-log.html
 LOG_DIR=/data/tweets/logs
 
 
-JAVA="java $XMX -Dlogdir=$LOG_DIR -Dlogfile=$HTML_LOG -Dlogat=$LOGAT -Dlog=$LOG -cp .:./target/$PROJECT_NAME-$VERSION-jar-with-dependencies.jar "
+JAVA="java $XMX -Dlogdir=$LOG_DIR -Dlogfile=$HTML_LOG -Dlogat=$LOGAT -Dlog=$LOG -cp .:./target/twitter-0.0.1-SNAPSHOT.jar "
