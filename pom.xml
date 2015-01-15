@@ -235,12 +235,12 @@
 	</build>
 
 
-	<properties>
-		<jdkLevel>1.5</jdkLevel>
-		<jetty.version>6.1.18</jetty.version>
-		<http.port>8080</http.port>
+<!-- 	<properties> -->
+<!-- 		<jdkLevel>1.5</jdkLevel> -->
+<!-- 		<jetty.version>6.1.18</jetty.version> -->
+<!-- 		<http.port>8080</http.port> -->
 		
-	</properties>
+<!-- 	</properties> -->
 
 	<repositories>
 		<repository>
