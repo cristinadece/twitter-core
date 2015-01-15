@@ -41,7 +41,7 @@ public class SplitFileInTimeBucketsCLI extends AbstractCommandLineInterface {
 
 	private static String[] params = new String[] { INPUT, OUTPUT, "interval" };
 
-	private static long interval = 1800000; // half an hour
+	public static long interval = 1800000; // half an hour
 
 	final static int LOOP_DELAY = 900000; // 15 min
 
