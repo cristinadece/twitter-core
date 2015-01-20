@@ -7,6 +7,8 @@ EXPECTED_ARGS=2
 E_BADARGS=65
 
 BUCKET_SIZE_IN_MINUTES=30
+BUCKETS = 9
+
 
 if [ $# -ne $EXPECTED_ARGS ]
 then
@@ -17,6 +19,6 @@ fi
 
 echo "given the folder with the buckets $1, generates the trend in $2"
 
-$JAVA it.cnr.isti.hpc.twitter.trends.WordFrequencyCLI -input $1 -output $2 -interval $BUCKET_SIZE_IN_MINUTES
+$JAVA it.cnr.isti.hpc.twitter.trends.WordFrequencyCLI -input $1 -output $2 -interval $BUCKET_SIZE_IN_MINUTES -buckets $BUCKETS
 
 

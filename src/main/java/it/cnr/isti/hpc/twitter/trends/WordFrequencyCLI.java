@@ -54,7 +54,10 @@ public class WordFrequencyCLI extends AbstractCommandLineInterface {
 			+ WordFrequencyCLI.class
 			+ " -input timeBucketFolder -output burstyKeywordFile -interval time-in-minutes";
 
-	private static String[] params = new String[] { INPUT, OUTPUT, "interval" };
+	private static String[] params = new String[] { INPUT, OUTPUT, "interval",
+			"buckets" };
+
+	private static int BUCKETS = 15;
 
 	WordFrequencyCLI(String[] args) {
 		super(args, params, USAGE);
@@ -289,6 +292,7 @@ public class WordFrequencyCLI extends AbstractCommandLineInterface {
 		// we can do everything here
 
 		WordFrequencyCLI cli = new WordFrequencyCLI(args);
+		BUCKETS = cli.getIntParam("buckets");
 		cli.init();
 		long interval = Long.parseLong(cli.getParam("interval"));
 		interval = interval * 60 * 1000; // from minutes to milliseconds
@@ -314,7 +318,7 @@ public class WordFrequencyCLI extends AbstractCommandLineInterface {
 			});
 
 			// 2. establish the length of the vector 7-10 buckets?
-			int vectorLen = 7;
+			// int vectorLen = 7;
 
 			// 3. we start with the one before last bucket and initialize the
 			// dictionary
@@ -327,8 +331,8 @@ public class WordFrequencyCLI extends AbstractCommandLineInterface {
 			// 4. we search for those keywords TODO (uni,bi,trigrams) in the
 			// previous buckets (should we keep different maps?)
 			File[] previousFiles;
-			if (files.length >= vectorLen + 2) {
-				previousFiles = Arrays.copyOfRange(files, 2, vectorLen + 1);
+			if (files.length >= BUCKETS + 2) {
+				previousFiles = Arrays.copyOfRange(files, 2, BUCKETS + 1);
 
 			} else {
 				previousFiles = Arrays.copyOfRange(files, 2, files.length - 1);
@@ -356,7 +360,7 @@ public class WordFrequencyCLI extends AbstractCommandLineInterface {
 
 			// 7. print all data, including tweetID and userID
 
-			cli.writeDictionaryFreq(cli, vectorLen);
+			cli.writeDictionaryFreq(cli, BUCKETS);
 			try {
 				Thread.sleep(interval);
 			} catch (InterruptedException e) {

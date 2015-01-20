@@ -39,8 +39,10 @@ public class SplitFileInTimeBucketsCLI extends AbstractCommandLineInterface {
 			+ SplitFileInTimeBucketsCLI.class
 			+ " -input full-dump-folder -output output-folder -interval minutes";
 
-	private static String[] params = new String[] { INPUT, OUTPUT, "interval" };
+	private static String[] params = new String[] { INPUT, OUTPUT, "interval",
+			"buckets" };
 
+	public static int buckets = 9;
 	public static long interval = 1800000; // half an hour
 
 	final static int LOOP_DELAY = 900000; // 15 min
@@ -68,7 +70,9 @@ public class SplitFileInTimeBucketsCLI extends AbstractCommandLineInterface {
 			return false;
 		long timeInMilis = Long.parseLong(name.replace(".json.gz", ""));
 		long now = System.currentTimeMillis();
-		return ((now - timeInMilis) > interval * 7); // 604800000 = 7 days
+		return ((now - timeInMilis) > interval * (buckets + 2)); // 604800000 =
+																	// 7
+																	// days
 	}
 
 	public static void deleteOlderFiles(SplitFileInTimeBucketsCLI cli) {
@@ -86,6 +90,7 @@ public class SplitFileInTimeBucketsCLI extends AbstractCommandLineInterface {
 			throws InvalidTweetException, IOException {
 
 		String dirname = cli.getInput();
+		buckets = cli.getIntParam("buckets");
 
 		BufferedReader br = null;
 		long bucketStartTime = System.currentTimeMillis();
