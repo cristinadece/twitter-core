@@ -1,0 +1,16 @@
+## Usage
+
+Download the stream 
+
+./scripts/dump-stream.sh
+
+## Apply the filters
+
+./scripts/apply-filter.sh [full dump folder] [output directory] [filter name] 
+
+on rojo: 
+
+./scripts/apply-filter.sh /data/tweets/gardenhose-full-dump /data/tweets/ georef-tweets
+./scripts/apply-filter.sh /data/tweets/gardenhose-full-dump /data/tweets/ italian-tweets
+./scripts/apply-filter.sh /data/tweets/gardenhose-full-dump /data/tweets/ english-tweets
+
