@@ -18,5 +18,6 @@ fi
 
 echo "generate italian buckets from $1 in $2, one bucket every $BUCKET_SIZE_IN_MINUTES minutes"
 
-$JAVA it.cnr.isti.hpc.twitter.trends.SplitFileInTimeBucketsCLI -input $1 -output $2  -interval $BUCKET_SIZE_IN_MINUTES -buckets $BUCKETS
-
+while true; do 
+	$JAVA it.cnr.isti.hpc.twitter.trends.SplitFileInTimeBucketsCLI -input $1 -output $2  -interval $BUCKET_SIZE_IN_MINUTES -buckets $BUCKETS
+done
